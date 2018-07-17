@@ -9,8 +9,7 @@ class Pbl(object):
         pass
 
     def parse(self, script):
-        tree = parser.parse(script)
-        print(tree)
+        return parser.parse(script)
 
     def run(self, bytecode):
         pass

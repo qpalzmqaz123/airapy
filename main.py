@@ -10,9 +10,6 @@ a + 1
 if __name__ == '__main__':
     pbl = Pbl(10)
 
-    bytecode = pbl.parse(SCRIPT)
+    tree = pbl.parse(SCRIPT)
 
-    print(bytecode)
-
-    result = pbl.run(bytecode)
-
+    print(tree)
