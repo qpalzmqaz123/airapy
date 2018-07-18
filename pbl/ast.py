@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from . import compiler
+from .compiler import Register
+
 class Tree(object):
 
     def eval(self):
@@ -37,6 +40,9 @@ class Int(Node):
     def __init__(self, n):
         self.value = n
 
+    def compile(self):
+        return [compiler.LOADC(int(self.value), Register.R0)]
+
 class Float(Node):
 
     def __init__(self, f):
@@ -62,6 +68,28 @@ class BinOp(Node):
         self.left = left
         self.right = right
         self.type = type
+
+    def compile(self):
+        i_arr = []
+
+        i_arr += self.left.compile()
+        i_arr.append(compiler.PUSH(Register.R0))
+
+        i_arr += self.right.compile()
+        i_arr.append(compiler.PUSH(Register.R0))
+
+        if self.type == self.ADD:
+            i_arr.append(compiler.ADD(Register.R1, Register.R0))
+        elif self.type == self.SUB:
+            i_arr.append(compiler.SUB(Register.R1, Register.R0))
+        elif self.type == self.MUL:
+            i_arr.append(compiler.MUL(Register.R1, Register.R0))
+        elif self.type == self.DIV:
+            i_arr.append(compiler.DIV(Register.R1, Register.R0))
+        else:
+            raise Exception('Invliad operation: %s' % self.type)
+
+        return i_arr
 
 class Assign(Node):
 
