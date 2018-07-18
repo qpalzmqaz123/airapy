@@ -12,6 +12,9 @@ class Register(Enum):
     def __repr__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
 @unique
 class Opcode(Enum):
     # NOP: no operation
@@ -41,17 +44,25 @@ class Instruction(object):
         return '%s(%s)' % (type(self).__name__, str(self.__dict__))
 
 class NOP(Instruction):
-    pass
+
+    def __str__(self):
+        return '%-6s' % (type(self).__name__)
 
 class PUSH(Instruction):
 
     def __init__(self, source):
         self.source = source
 
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.source)
+
 class POP(Instruction):
 
     def __init__(self, target):
         self.target = target
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.target)
 
 class MOV(Instruction):
 
@@ -59,13 +70,21 @@ class MOV(Instruction):
         self.source = source
         self.target = target
 
+    def __str__(self):
+        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+
 class LOADC(Instruction):
 
     def __init__(self, value, target):
         self.value = value
         self.target = target
 
-    def LOADV(self):
+    def __str__(self):
+        return '%-6s %s %s' % (type(self).__name__, self.value, self.target)
+
+class LOADV(Instruction):
+
+    def __init__(self):
         pass
 
 class ADD(Instruction):
@@ -74,11 +93,17 @@ class ADD(Instruction):
         self.source = source
         self.target = target
 
+    def __str__(self):
+        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+
 class SUB(Instruction):
 
     def __init__(self, source, target):
         self.source = source
         self.target = target
+
+    def __str__(self):
+        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
 
 class MUL(Instruction):
 
@@ -86,8 +111,14 @@ class MUL(Instruction):
         self.source = source
         self.target = target
 
+    def __str__(self):
+        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+
 class DIV(Instruction):
 
     def __init__(self, source, target):
         self.source = source
         self.target = target
+
+    def __str__(self):
+        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)

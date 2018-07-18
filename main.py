@@ -20,4 +20,4 @@ if __name__ == '__main__':
     print(tree)
 
     print('\n------- bytecode --------')
-    print('\n'.join([str(x) for x in bytecode]))
+    print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
