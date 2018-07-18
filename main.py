@@ -13,11 +13,11 @@ if __name__ == '__main__':
     tree = pbl.parse(SCRIPT)
     bytecode = pbl.compile(tree)
 
-    print('------- script --------')
+    print('\n------- script --------')
     print(SCRIPT)
 
-    print('------- AST --------')
+    print('\n------- AST --------')
     print(tree)
 
-    print('------- bytecode --------')
+    print('\n------- bytecode --------')
     print('\n'.join([str(x) for x in bytecode]))
