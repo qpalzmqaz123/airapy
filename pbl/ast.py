@@ -76,7 +76,7 @@ class BinOp(Node):
         i_arr.append(compiler.PUSH(Register.R0))
 
         i_arr += self.right.compile()
-        i_arr.append(compiler.PUSH(Register.R0))
+        i_arr.append(compiler.POP(Register.R1))
 
         if self.type == self.ADD:
             i_arr.append(compiler.ADD(Register.R1, Register.R0))

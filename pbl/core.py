@@ -11,5 +11,8 @@ class Pbl(object):
     def parse(self, script):
         return parser.parse(script)
 
+    def compile(self, tree):
+        return tree.compile()
+
     def run(self, bytecode):
         pass

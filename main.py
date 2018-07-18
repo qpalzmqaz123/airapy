@@ -11,6 +11,7 @@ if __name__ == '__main__':
     pbl = Pbl(10)
 
     tree = pbl.parse(SCRIPT)
+    bytecode = pbl.compile(tree)
 
     print('------- script --------')
     print(SCRIPT)
@@ -19,6 +20,5 @@ if __name__ == '__main__':
     print(tree)
 
     print('------- bytecode --------')
-    i_arr = tree.compile()
-    for i in i_arr:
+    for i in bytecode:
         print(i)
