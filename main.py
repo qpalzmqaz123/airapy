@@ -21,3 +21,6 @@ if __name__ == '__main__':
 
     print('\n------- bytecode --------')
     print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
+
+    print('\n------- run --------')
+    pbl.run(bytecode)

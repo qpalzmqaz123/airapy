@@ -7,7 +7,8 @@ from enum import Enum, unique
 class Register(Enum):
     R0 = 1
     R1 = 2
-    R2 = 3
+    PC = 3
+    SP = 4
 
     def __repr__(self):
         return self.name
@@ -43,10 +44,16 @@ class Instruction(object):
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, str(self.__dict__))
 
+    def __str__(self):
+        return self.__repr__()
+
 class NOP(Instruction):
 
     def __str__(self):
         return '%-6s' % (type(self).__name__)
+
+    def run(self, vm):
+        vm.reg[Register.PC] += 1
 
 class PUSH(Instruction):
 
@@ -56,6 +63,12 @@ class PUSH(Instruction):
     def __str__(self):
         return '%-6s %s' % (type(self).__name__, self.source)
 
+    def run(self, vm):
+        vm.stack[vm.reg[Register.SP]] = vm.reg[self.source]
+        vm.reg[Register.SP] += 1
+
+        vm.reg[Register.PC] += 1
+
 class POP(Instruction):
 
     def __init__(self, target):
@@ -63,6 +76,12 @@ class POP(Instruction):
 
     def __str__(self):
         return '%-6s %s' % (type(self).__name__, self.target)
+
+    def run(self, vm):
+        vm.reg[Register.SP] -= 1
+        vm.reg[self.target] = vm.stack[vm.reg[Register.SP]]
+
+        vm.reg[Register.PC] += 1
 
 class MOV(Instruction):
 
@@ -82,6 +101,11 @@ class LOADC(Instruction):
     def __str__(self):
         return '%-6s %s %s' % (type(self).__name__, self.value, self.target)
 
+    def run(self, vm):
+        vm.reg[self.target] = self.value
+
+        vm.reg[Register.PC] += 1
+
 class LOADV(Instruction):
 
     def __init__(self):
@@ -95,6 +119,11 @@ class ADD(Instruction):
 
     def __str__(self):
         return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+
+    def run(self, vm):
+        vm.reg[self.target] = vm.reg[self.source] + vm.reg[self.target]
+
+        vm.reg[Register.PC] += 1
 
 class SUB(Instruction):
 
@@ -113,6 +142,11 @@ class MUL(Instruction):
 
     def __str__(self):
         return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+
+    def run(self, vm):
+        vm.reg[self.target] = vm.reg[self.source] * vm.reg[self.target]
+
+        vm.reg[Register.PC] += 1
 
 class DIV(Instruction):
 
