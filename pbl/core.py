@@ -3,7 +3,7 @@
 
 from . import parser
 from . import vm
-from .compiler import Register
+from .vm import Register
 
 class Pbl(object):
 

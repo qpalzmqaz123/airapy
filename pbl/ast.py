@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from . import compiler
-from .compiler import Register
+from .vm import Register
 
 class Tree(object):
 
@@ -41,7 +41,7 @@ class Int(Node):
         self.value = n
 
     def compile(self):
-        return [compiler.LOADC(int(self.value), Register.R0)]
+        return [compiler.PUSH(int(self.value))]
 
 class Float(Node):
 
@@ -73,19 +73,16 @@ class BinOp(Node):
         i_arr = []
 
         i_arr += self.left.compile()
-        i_arr.append(compiler.PUSH(Register.R0))
-
         i_arr += self.right.compile()
-        i_arr.append(compiler.POP(Register.R1))
 
         if self.type == self.ADD:
-            i_arr.append(compiler.ADD(Register.R1, Register.R0))
+            i_arr.append(compiler.ADD())
         elif self.type == self.SUB:
-            i_arr.append(compiler.SUB(Register.R1, Register.R0))
+            i_arr.append(compiler.SUB())
         elif self.type == self.MUL:
-            i_arr.append(compiler.MUL(Register.R1, Register.R0))
+            i_arr.append(compiler.MUL())
         elif self.type == self.DIV:
-            i_arr.append(compiler.DIV(Register.R1, Register.R0))
+            i_arr.append(compiler.DIV())
         else:
             raise Exception('Invliad operation: %s' % self.type)
 
