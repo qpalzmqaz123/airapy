@@ -4,7 +4,9 @@
 from pbl import Pbl
 
 SCRIPT = '''\
-1 * (2 + 3 * (4 + 5 * (6 + 7)))
+a = 3 + 1
+a = a + 1
+b = 2 * (a + 1)
 '''
 
 if __name__ == '__main__':

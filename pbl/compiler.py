@@ -20,6 +20,10 @@ class Opcode(Enum):
     MUL = 5
     # DIV: S(-2) = S(-2) / S(-1)
     DIV = 6
+    # SET A: HASH(A) = S(-1)
+    SET = 7
+    # GET A: S(-1) = HASH(A)
+    GET = 8
 
 class Instruction(object):
 
@@ -95,3 +99,29 @@ class DIV(Instruction):
 
     def __str__(self):
         return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+
+class SET(Instruction):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.name)
+
+    def run(self, vm):
+        vm.frame.hash[self.name] = vm.stack[vm.reg[Register.SP] - 1]
+        vm.reg[Register.SP] -= 1
+        vm.reg[Register.PC] += 1
+
+class GET(Instruction):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.name)
+
+    def run(self, vm):
+        vm.stack[vm.reg[Register.SP]] = vm.frame.hash[self.name]
+        vm.reg[Register.SP] += 1
+        vm.reg[Register.PC] += 1

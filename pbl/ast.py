@@ -35,6 +35,19 @@ class Block(Tree):
     def __iter__(self):
         return iter(self.list)
 
+    def compile(self):
+        i_arr = []
+
+        for tree in self:
+            try:
+                i_arr += tree.compile()
+            except TypeError as err:
+                print('Compile error:', str(tree))
+
+                raise err
+
+        return i_arr
+
 class Int(Node):
 
     def __init__(self, n):
@@ -57,6 +70,9 @@ class Variable(Node):
 
     def __init__(self, name):
         self.name = name
+
+    def compile(self):
+        return [compiler.GET(self.name)]
 
 class BinOp(Node):
     ADD = '+'
@@ -93,6 +109,12 @@ class Assign(Node):
     def __init__(self, variable, value):
         self.variable = variable
         self.value = value
+
+    def compile(self):
+        i_arr = self.value.compile()
+        i_arr.append(compiler.SET(self.variable.name))
+
+        return i_arr
 
 class Compare(Node):
     GT = '>'

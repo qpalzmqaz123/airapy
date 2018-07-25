@@ -17,11 +17,17 @@ class Pbl(object):
         return tree.compile()
 
     def run(self, bytecode):
+        frame = vm.Frame()
+
+        self._vm.push_frame(frame)
+
         while True:
             if (self._vm.reg[Register.PC] >= len(bytecode)):
                 break
 
             ins = bytecode[self._vm.reg[Register.PC]]
             ins.run(self._vm)
+
+#        self._vm.pop_frame()
 
         print(self._vm)
