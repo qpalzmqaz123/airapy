@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from . import compiler
-from .vm import Register
 
 class Tree(object):
 
