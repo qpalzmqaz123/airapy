@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from enum import Enum, unique
-from .vm import Register
 
 @unique
 class Opcode(Enum):
@@ -36,7 +35,7 @@ class Instruction(object):
 class NOP(Instruction):
 
     def run(self, vm):
-        vm.reg[Register.PC] += 1
+        vm.reg.PC += 1
 
 class PUSH(Instruction):
 
@@ -47,17 +46,17 @@ class PUSH(Instruction):
         return '%-6s %s' % (type(self).__name__, self.source)
 
     def run(self, vm):
-        vm.stack[vm.reg[Register.SP]] = self.source
-        vm.reg[Register.SP] += 1
-        vm.reg[Register.PC] += 1
+        vm.stack[vm.reg.SP] = self.source
+        vm.reg.SP += 1
+        vm.reg.PC += 1
 
 class POP(Instruction):
 
     def run(self, vm):
-        vm.reg[Register.SP] -= 1
-        vm.reg[Register.PC] += 1
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
 
-        return vm.stack[vm.reg[Register.SP]]
+        return vm.stack[vm.reg.SP]
 
 class MOV(Instruction):
 
@@ -71,9 +70,9 @@ class MOV(Instruction):
 class ADD(Instruction):
 
     def run(self, vm):
-        vm.stack[vm.reg[Register.SP] - 2] = vm.stack[vm.reg[Register.SP] - 2] + vm.stack[vm.reg[Register.SP] - 1]
-        vm.reg[Register.SP] -= 1
-        vm.reg[Register.PC] += 1
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] + vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
 
 class SUB(Instruction):
 
@@ -87,9 +86,9 @@ class SUB(Instruction):
 class MUL(Instruction):
 
     def run(self, vm):
-        vm.stack[vm.reg[Register.SP] - 2] = vm.stack[vm.reg[Register.SP] - 2] * vm.stack[vm.reg[Register.SP] - 1]
-        vm.reg[Register.SP] -= 1
-        vm.reg[Register.PC] += 1
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] * vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
 
 class DIV(Instruction):
 
@@ -109,9 +108,9 @@ class SET(Instruction):
         return '%-6s %s' % (type(self).__name__, self.name)
 
     def run(self, vm):
-        vm.frame.hash[self.name] = vm.stack[vm.reg[Register.SP] - 1]
-        vm.reg[Register.SP] -= 1
-        vm.reg[Register.PC] += 1
+        vm.frame.hash[self.name] = vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
 
 class GET(Instruction):
 
@@ -122,6 +121,6 @@ class GET(Instruction):
         return '%-6s %s' % (type(self).__name__, self.name)
 
     def run(self, vm):
-        vm.stack[vm.reg[Register.SP]] = vm.frame.hash[self.name]
-        vm.reg[Register.SP] += 1
-        vm.reg[Register.PC] += 1
+        vm.stack[vm.reg.SP] = vm.frame.hash[self.name]
+        vm.reg.SP += 1
+        vm.reg.PC += 1

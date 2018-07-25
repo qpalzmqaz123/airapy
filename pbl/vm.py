@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from enum import Enum, unique
-
-@unique
-class Register(Enum):
-    PC = 1
-    SP = 2
+class Register(object):
+    def __init__(self):
+        self.PC = 0
+        self.SP = 0
 
     def __repr__(self):
-        return self.name
+        return '%s(%s)' % (type(self).__name__, str(self.__dict__))
 
     def __str__(self):
-        return self.name
+        return self.__repr__()
 
 class Frame(object):
 
@@ -28,13 +26,10 @@ class Frame(object):
 class VM(object):
 
     def __init__(self):
-        self.reg = {}
+        self.reg = Register()
         self.stack = [0] * 20
         self.frames = []
         self.frame = None
-
-        for r in Register:
-            self.reg[r] = 0
 
     def __repr__(self):
         return str(self.__dict__)

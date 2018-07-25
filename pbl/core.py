@@ -3,7 +3,6 @@
 
 from . import parser
 from . import vm
-from .vm import Register
 
 class Pbl(object):
 
@@ -22,10 +21,10 @@ class Pbl(object):
         self._vm.push_frame(frame)
 
         while True:
-            if (self._vm.reg[Register.PC] >= len(bytecode)):
+            if (self._vm.reg.PC >= len(bytecode)):
                 break
 
-            ins = bytecode[self._vm.reg[Register.PC]]
+            ins = bytecode[self._vm.reg.PC]
             ins.run(self._vm)
 
 #        self._vm.pop_frame()
