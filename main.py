@@ -4,9 +4,13 @@
 from pbl import Pbl
 
 SCRIPT = '''\
-a = 3 + 1
-a = a + 1
-b = 2 * (a + 1)
+a = 0
+b = 2
+if a do
+    b = b + 1
+else
+    b = b + 2
+end
 '''
 
 if __name__ == '__main__':

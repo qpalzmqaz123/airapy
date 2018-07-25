@@ -8,7 +8,7 @@ class Tree(object):
     def eval(self):
         pass
 
-    def compile(self):
+    def compile(self, lst):
         pass
 
     def __repr__(self):
@@ -34,26 +34,22 @@ class Block(Tree):
     def __iter__(self):
         return iter(self.list)
 
-    def compile(self):
-        i_arr = []
-
+    def compile(self, lst):
         for tree in self:
             try:
-                i_arr += tree.compile()
+                tree.compile(lst)
             except TypeError as err:
                 print('Compile error:', str(tree))
 
                 raise err
-
-        return i_arr
 
 class Int(Node):
 
     def __init__(self, n):
         self.value = n
 
-    def compile(self):
-        return [compiler.PUSH(int(self.value))]
+    def compile(self, lst):
+        lst.append(compiler.PUSH(int(self.value)))
 
 class Float(Node):
 
@@ -70,8 +66,8 @@ class Variable(Node):
     def __init__(self, name):
         self.name = name
 
-    def compile(self):
-        return [compiler.GET(self.name)]
+    def compile(self, lst):
+        lst.append(compiler.GET(self.name))
 
 class BinOp(Node):
     ADD = '+'
@@ -84,24 +80,20 @@ class BinOp(Node):
         self.right = right
         self.type = type
 
-    def compile(self):
-        i_arr = []
-
-        i_arr += self.left.compile()
-        i_arr += self.right.compile()
+    def compile(self, lst):
+        self.left.compile(lst)
+        self.right.compile(lst)
 
         if self.type == self.ADD:
-            i_arr.append(compiler.ADD())
+            lst.append(compiler.ADD())
         elif self.type == self.SUB:
-            i_arr.append(compiler.SUB())
+            lst.append(compiler.SUB())
         elif self.type == self.MUL:
-            i_arr.append(compiler.MUL())
+            lst.append(compiler.MUL())
         elif self.type == self.DIV:
-            i_arr.append(compiler.DIV())
+            lst.append(compiler.DIV())
         else:
             raise Exception('Invliad operation: %s' % self.type)
-
-        return i_arr
 
 class Assign(Node):
 
@@ -109,11 +101,9 @@ class Assign(Node):
         self.variable = variable
         self.value = value
 
-    def compile(self):
-        i_arr = self.value.compile()
-        i_arr.append(compiler.SET(self.variable.name))
-
-        return i_arr
+    def compile(self, lst):
+        self.value.compile(lst)
+        lst.append(compiler.SET(self.variable.name))
 
 class Compare(Node):
     GT = '>'
@@ -138,6 +128,22 @@ class If(Node):
         self.condition = condition
         self.body = body
         self.otherwise = otherwise
+
+    def compile(self, lst):
+        self.condition.compile(lst)
+
+        index_else = lst.lastIndex + 1
+
+        self.otherwise.compile(lst)
+
+        index_if = lst.lastIndex + 1
+
+        self.body.compile(lst)
+
+        index_out = lst.lastIndex + 1
+
+        lst.insert(index_else, compiler.JMPT(index_if + 2))
+        lst.insert(index_if + 1, compiler.JMP(index_out + 2))
 
 class Function(Node):
 

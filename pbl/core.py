@@ -3,6 +3,7 @@
 
 from . import parser
 from . import vm
+from . import compiler
 
 class Pbl(object):
 
@@ -13,7 +14,11 @@ class Pbl(object):
         return parser.parse(script)
 
     def compile(self, tree):
-        return tree.compile()
+        lst = compiler.InstructionList()
+
+        tree.compile(lst)
+
+        return lst
 
     def run(self, bytecode):
         frame = vm.Frame()

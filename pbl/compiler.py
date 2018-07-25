@@ -23,6 +23,16 @@ class Opcode(Enum):
     SET = 7
     # GET A: S(-1) = HASH(A)
     GET = 8
+    # JMPT A: if S(-1) then R(PC) = A
+    JMPT = 9
+    # JMP A: R(PC) = A
+    JMP = 10
+
+class InstructionList(list):
+
+    @property
+    def lastIndex(self):
+        return len(self) - 1
 
 class Instruction(object):
 
@@ -124,3 +134,30 @@ class GET(Instruction):
         vm.stack[vm.reg.SP] = vm.frame.hash[self.name]
         vm.reg.SP += 1
         vm.reg.PC += 1
+
+class JMPT(Instruction):
+
+    def __init__(self, index):
+        self.index= index
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.index)
+
+    def run(self, vm):
+        if vm.stack[vm.reg.SP - 1]:
+            vm.reg.PC = self.index
+        else:
+            vm.reg.PC += 1
+
+        vm.reg.SP -= 1
+
+class JMP(Instruction):
+
+    def __init__(self, index):
+        self.index= index
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.index)
+
+    def run(self, vm):
+        vm.reg.PC = self.index
