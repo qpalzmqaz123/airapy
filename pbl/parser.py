@@ -82,6 +82,10 @@ def p_expr_stmt_le(p):
     '''test_stmt : expr_stmt LE expr_stmt'''
     p[0] = ast.Compare(p[1], p[3], ast.Compare.LE)
 
+def p_expr_stmt_eq(p):
+    '''test_stmt : expr_stmt EQ expr_stmt'''
+    p[0] = ast.Compare(p[1], p[3], ast.Compare.EQ)
+
 def p_expr_stmt_add(p):
     '''binop_stmt : expr_stmt PLUS expr_stmt'''
     p[0] = ast.BinOp(p[1], p[3], ast.BinOp.ADD)

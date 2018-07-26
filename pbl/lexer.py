@@ -17,7 +17,7 @@ reserved = {
 tokens = [
     'IDENTIFER', 'NUMBER',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
-    'GT', 'LT', 'GE', 'LE',
+    'GT', 'LT', 'GE', 'LE', 'EQ',
     'LPAREN','RPAREN',
     'COMMA',
     'NEWLINE',
@@ -35,6 +35,7 @@ t_GT = r'>'
 t_LT = r'<'
 t_GE = r'>='
 t_LE = r'<='
+t_EQ = r'=='
 
 t_COMMA = r','
 

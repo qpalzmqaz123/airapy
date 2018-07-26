@@ -27,6 +27,16 @@ class Opcode(Enum):
     JMPT = 9
     # JMP A: R(PC) = A
     JMP = 10
+    # EQ: S(-1) = S(-2) == S(-1)
+    EQ = 11
+    # GT: S(-1) = S(-2) > S(-1)
+    GT = 12
+    # GE: S(-1) = S(-2) >= S(-1)
+    GE = 13
+    # LT: S(-1) = S(-2) < S(-1)
+    LT = 14
+    # LE: S(-1) = S(-2) <= S(-1)
+    LE = 15
 
 class InstructionList(list):
 
@@ -161,3 +171,38 @@ class JMP(Instruction):
 
     def run(self, vm):
         vm.reg.PC = self.index
+
+class EQ(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] == vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class GT(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] > vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class GE(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] >= vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class LT(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] < vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class LE(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] <= vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1

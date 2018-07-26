@@ -110,11 +110,29 @@ class Compare(Node):
     GE = '>='
     LT = '<'
     LE = '<='
+    EQ = '=='
 
     def __init__(self, left, right, type):
         self.left = left
         self.right = right
         self.type = type
+
+    def compile(self, lst):
+        self.left.compile(lst)
+        self.right.compile(lst)
+
+        if self.type == self.GT:
+            lst.append(compiler.GT())
+        elif self.type == self.GE:
+            lst.append(compiler.GE())
+        elif self.type == self.LT:
+            lst.append(compiler.LT())
+        elif self.type == self.LE:
+            lst.append(compiler.LE())
+        elif self.type == self.EQ:
+            lst.append(compiler.EQ())
+        else:
+            raise Exception('Invliad operation: %s' % self.type)
 
 class While(Node):
 

@@ -4,12 +4,10 @@
 from pbl import Pbl
 
 SCRIPT = '''\
-a = 0
-b = 2
-if a do
-    b = b + 1
-else
-    b = b + 2
+a = 1
+b = 3
+if b == 2 do
+    a = 2
 end
 '''
 
