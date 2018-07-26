@@ -25,18 +25,20 @@ class Opcode(Enum):
     GET = 8
     # JMPT A: if S(-1) then R(PC) = A
     JMPT = 9
+    # JMPF A: if not S(-1) then R(PC) = A
+    JMPF = 10
     # JMP A: R(PC) = A
-    JMP = 10
+    JMP = 11
     # EQ: S(-1) = S(-2) == S(-1)
-    EQ = 11
+    EQ = 12
     # GT: S(-1) = S(-2) > S(-1)
-    GT = 12
+    GT = 13
     # GE: S(-1) = S(-2) >= S(-1)
-    GE = 13
+    GE = 14
     # LT: S(-1) = S(-2) < S(-1)
-    LT = 14
+    LT = 15
     # LE: S(-1) = S(-2) <= S(-1)
-    LE = 15
+    LE = 16
 
 class InstructionList(list):
 
@@ -155,6 +157,22 @@ class JMPT(Instruction):
 
     def run(self, vm):
         if vm.stack[vm.reg.SP - 1]:
+            vm.reg.PC = self.index
+        else:
+            vm.reg.PC += 1
+
+        vm.reg.SP -= 1
+
+class JMPF(Instruction):
+
+    def __init__(self, index):
+        self.index= index
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.index)
+
+    def run(self, vm):
+        if not vm.stack[vm.reg.SP - 1]:
             vm.reg.PC = self.index
         else:
             vm.reg.PC += 1

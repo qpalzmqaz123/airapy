@@ -140,6 +140,26 @@ class While(Node):
         self.condition = condition
         self.body = body
 
+    def compile(self, lst):
+        # a ... (condition)
+        # b JMPF c
+        #   ...
+        #   JMP a
+        # c ...
+        index_a = lst.lastIndex + 1
+
+        self.condition.compile(lst)
+
+        index_b = lst.lastIndex + 1
+        lst.append(compiler.JMPF(-1))
+
+        self.body.compile(lst)
+        lst.append(compiler.JMP(index_a))
+
+        index_c = lst.lastIndex + 1
+
+        lst[index_b].index = index_c
+
 class If(Node):
 
     def __init__(self, condition, body, otherwise):
