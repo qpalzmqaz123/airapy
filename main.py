@@ -4,16 +4,17 @@
 from pbl import Pbl
 
 SCRIPT = '''\
-a = 0
-b = 0
+a = 1
+b = 2
 c = 0
-while a < 5 do
-    a = a + 1
-    c = 0
-    while c < 2 do
-        c = c + 1
-        b = b + 1
+if a == 1 do
+    if b == 2 do
+        c = 3
+    else
+        c = 5
     end
+else
+    c = 4
 end
 '''
 

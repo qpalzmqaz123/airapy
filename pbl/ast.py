@@ -168,20 +168,29 @@ class If(Node):
         self.otherwise = otherwise
 
     def compile(self, lst):
+        #   ... (condition)
+        # a JMPT b
+        #   ... (false)
+        #   JMP c
+        # b ... (true)
+        # c ...
         self.condition.compile(lst)
 
-        index_else = lst.lastIndex + 1
+        index_a = lst.lastIndex + 1
+        lst.append(compiler.JMPT(-1))
 
         self.otherwise.compile(lst)
 
-        index_if = lst.lastIndex + 1
+        lst.append(compiler.JMP(-1))
+
+        index_b = lst.lastIndex + 1
 
         self.body.compile(lst)
 
-        index_out = lst.lastIndex + 1
+        index_c = lst.lastIndex + 1
 
-        lst.insert(index_else, compiler.JMPT(index_if + 2))
-        lst.insert(index_if + 1, compiler.JMP(index_out + 2))
+        lst[index_a].index = index_b
+        lst[index_b - 1].index = index_c
 
 class Function(Node):
 
