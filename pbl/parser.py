@@ -10,7 +10,7 @@ tokens = lexer.tokens
 
 precedence = (
     ('left', 'EQUALS'),
-    ('left', 'GT', 'GE', 'LT', 'LE'),
+    ('left', 'GT', 'GE', 'LT', 'LE', 'EQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
 )
