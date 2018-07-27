@@ -9,7 +9,7 @@ from . import ast
 tokens = lexer.tokens
 
 precedence = (
-    ('left', 'EQUALS'),
+    ('right', 'EQUALS', 'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ'),
     ('left', 'GT', 'GE', 'LT', 'LE', 'EQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
