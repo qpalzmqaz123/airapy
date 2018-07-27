@@ -98,12 +98,10 @@ class ADD(Instruction):
 
 class SUB(Instruction):
 
-    def __init__(self, source, target):
-        self.source = source
-        self.target = target
-
-    def __str__(self):
-        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] - vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
 
 class MUL(Instruction):
 
@@ -114,12 +112,10 @@ class MUL(Instruction):
 
 class DIV(Instruction):
 
-    def __init__(self, source, target):
-        self.source = source
-        self.target = target
-
-    def __str__(self):
-        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] / vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
 
 class SET(Instruction):
 

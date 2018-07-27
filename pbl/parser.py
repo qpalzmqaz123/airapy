@@ -66,6 +66,22 @@ def p_stmt_expr_assign(p):
     '''assign_stmt : IDENTIFER EQUALS expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), p[3])
 
+def p_stmt_expr_add_assign(p):
+    '''assign_stmt : IDENTIFER ADDEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.ADD))
+
+def p_stmt_expr_sub_assign(p):
+    '''assign_stmt : IDENTIFER SUBEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.SUB))
+
+def p_stmt_expr_mul_assign(p):
+    '''assign_stmt : IDENTIFER MULEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.MUL))
+
+def p_stmt_expr_div_assign(p):
+    '''assign_stmt : IDENTIFER DIVEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.DIV))
+
 def p_expr_stmt_gt(p):
     '''test_stmt : expr_stmt GT expr_stmt'''
     p[0] = ast.Compare(p[1], p[3], ast.Compare.GT)

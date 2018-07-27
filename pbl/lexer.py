@@ -17,6 +17,7 @@ reserved = {
 tokens = [
     'IDENTIFER', 'NUMBER',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
+    'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ',
     'LPAREN','RPAREN',
     'COMMA',
@@ -30,6 +31,10 @@ t_MINUS   = r'-'
 t_TIMES   = r'\*'
 t_DIVIDE  = r'/'
 t_EQUALS  = r'='
+t_ADDEQ   = r'\+='
+t_SUBEQ   = r'\-='
+t_MULEQ   = r'\*='
+t_DIVEQ   = r'/='
 
 t_GT = r'>'
 t_LT = r'<'
