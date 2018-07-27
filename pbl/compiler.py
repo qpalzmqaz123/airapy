@@ -127,7 +127,7 @@ class SET(Instruction):
 
     def run(self, vm):
         vm.frame.hash[self.name] = vm.stack[vm.reg.SP - 1]
-        vm.reg.SP -= 1
+#        vm.reg.SP -= 1
         vm.reg.PC += 1
 
 class GET(Instruction):
