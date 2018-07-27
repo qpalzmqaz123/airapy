@@ -4,18 +4,13 @@
 from pbl import Pbl
 
 SCRIPT = '''\
-a = 1
-b = 2
-c = 0
-if a == 1 do
-    if b == 2 do
-        c = 3
-    else
-        c = 5
-    end
-else
-    c = 4
+fn1 = fn(v) do
+    v += 2
+
+    return v
 end
+
+a = fn1(1)
 '''
 
 if __name__ == '__main__':
@@ -34,4 +29,6 @@ if __name__ == '__main__':
     print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
 
     print('\n------- run --------')
-    pbl.run(bytecode)
+    frame = pbl.run(bytecode, debug=True)
+
+    print(frame)

@@ -198,6 +198,29 @@ class Function(Node):
         self.args = args
         self.body = body
 
+    def compile(self, lst):
+        #   ...
+        # a JMP b
+        #   ... (function body)
+        # b ...
+        index = -1 - len(self.args)
+
+        lst.append(compiler.JMP(-1))
+        index_a = lst.lastIndex
+
+        if (len(self.args)):
+            for k in self.args:
+                lst.append(compiler.DUP(index))
+                lst.append(compiler.SET(k))
+                lst.append(compiler.POP())
+
+        self.body.compile(lst)
+        index_b = lst.lastIndex + 1
+
+        lst.append(compiler.MKFN(index_a + 1))
+
+        lst[index_a].index = index_b
+
 class Arguments(Node):
 
     def __init__(self):
@@ -213,13 +236,43 @@ class Arguments(Node):
 
         return type(self).__name__ + '(' + ', '.join(values) + ')'
 
+    def __iter__(self):
+        return iter(self.list)
+
+    def __len__(self):
+        return len(self.list)
+
+    def compile(self, lst):
+        for node in self:
+            node.compile(lst)
+
 class Return(Node):
 
     def __init__(self, expr):
         self.expr = expr
+
+    def compile(self, lst):
+        if not self.expr:
+            lst.append(compiler.PUSH(None))
+        else:
+            self.expr.compile(lst)
+
+        lst.append(compiler.RET())
 
 class Call(Node):
 
     def __init__(self, fn, args):
         self.fn = fn
         self.args = args
+
+    def compile(self, lst):
+        # ...
+        # SP
+        # ... (args)
+        # ... (function body)
+        lst.append(compiler.PUSHR('SP'))
+
+        self.args.compile(lst)
+        self.fn.compile(lst)
+
+        lst.append(compiler.CALL())

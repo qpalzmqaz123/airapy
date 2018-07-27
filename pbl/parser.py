@@ -123,16 +123,24 @@ def p_expr_stmt_parenthesis(p):
     p[0] = p[2]
 
 def p_fn_stmt_multi_args(p):
-    '''fn_stmt : FN LPAREN expr_stmt_list expr_stmt RPAREN DO stmt_list END'''
+    '''fn_stmt : FN LPAREN identifer_list IDENTIFER RPAREN DO stmt_list END'''
     p[0] = ast.Function(p[3].append(p[4]), p[7])
 
 def p_fn_stmt_single_args(p):
-    '''fn_stmt : FN LPAREN expr_stmt RPAREN DO stmt_list END'''
+    '''fn_stmt : FN LPAREN IDENTIFER RPAREN DO stmt_list END'''
     p[0] = ast.Function(ast.Arguments().append(p[3]), p[6])
 
 def p_fn_stmt_empty_args(p):
     '''fn_stmt : FN LPAREN RPAREN DO stmt_list END'''
     p[0] = ast.Function(ast.Arguments(), p[5])
+
+def p_fn_stmt_identifer_list(p):
+    '''identifer_list : IDENTIFER COMMA
+                      | identifer_list IDENTIFER COMMA'''
+    if len(p) == 3:
+        p[0] = ast.Arguments().append(p[1])
+    elif len(p) == 4:
+        p[0] = p[1].append(p[2])
 
 def p_call_stmt_multi_args(p):
     '''call_stmt : IDENTIFER LPAREN expr_stmt_list expr_stmt RPAREN'''

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import time
 from . import parser
 from . import vm
 from . import compiler
@@ -20,7 +21,7 @@ class Pbl(object):
 
         return lst
 
-    def run(self, bytecode):
+    def run(self, bytecode, debug=False):
         frame = vm.Frame()
 
         self._vm.push_frame(frame)
@@ -32,6 +33,7 @@ class Pbl(object):
             ins = bytecode[self._vm.reg.PC]
             ins.run(self._vm)
 
-#        self._vm.pop_frame()
+        if debug == False:
+            self._vm.pop_frame()
 
-        print(self._vm)
+        return self._vm
