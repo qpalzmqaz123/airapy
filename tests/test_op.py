@@ -134,3 +134,13 @@ class TestAssign(BaseTest):
         a /= 2
         '''
         assert self.vm.frame.hash['a'] == 1
+
+    def test_get(self):
+        '''
+        a = 1
+        b = 2
+        c = a + b
+        '''
+        assert self.vm.frame.hash['a'] == 1
+        assert self.vm.frame.hash['b'] == 2
+        assert self.vm.frame.hash['c'] == 3
