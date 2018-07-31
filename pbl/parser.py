@@ -40,10 +40,10 @@ def p_stmt_newline(p):
     pass
 
 def p_stmt_expr(p):
-    '''stmt : expr_stmt
-            | while_stmt
-            | if_stmt
-            | return_stmt'''
+    '''stmt : expr_stmt NEWLINE
+            | while_stmt NEWLINE
+            | if_stmt NEWLINE
+            | return_stmt NEWLINE'''
     p[0] = p[1]
 
 def p_stmt_exprs(p):
@@ -187,6 +187,9 @@ def p_error(p):
 parser = yacc.yacc()
 
 def parse(script):
+    if not (script.endswith('\r') or script.endswith('\n')):
+        script += '\n'
+
     tree = parser.parse(script)
 
     return tree
