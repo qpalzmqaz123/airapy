@@ -36,6 +36,8 @@ class Opcode(Enum):
     JMP = 11
     # EQ: S(-1) = S(-2) == S(-1)
     EQ = 12
+    # NE: S(-1) = S(-2) != S(-1)
+    NE = 102
     # GT: S(-1) = S(-2) > S(-1)
     GT = 13
     # GE: S(-1) = S(-2) >= S(-1)
@@ -234,6 +236,13 @@ class EQ(Instruction):
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] == vm.stack[vm.reg.SP - 1]
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class NE(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] != vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 

@@ -10,7 +10,7 @@ tokens = lexer.tokens
 
 precedence = (
     ('right', 'EQUALS', 'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ'),
-    ('left', 'GT', 'GE', 'LT', 'LE', 'EQ'),
+    ('left', 'GT', 'GE', 'LT', 'LE', 'EQ', 'NE'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
 )
@@ -101,6 +101,10 @@ def p_expr_stmt_le(p):
 def p_expr_stmt_eq(p):
     '''test_stmt : expr_stmt EQ expr_stmt'''
     p[0] = ast.Compare(p[1], p[3], ast.Compare.EQ)
+
+def p_expr_stmt_ne(p):
+    '''test_stmt : expr_stmt NE expr_stmt'''
+    p[0] = ast.Compare(p[1], p[3], ast.Compare.NE)
 
 def p_expr_stmt_add(p):
     '''binop_stmt : expr_stmt PLUS expr_stmt'''

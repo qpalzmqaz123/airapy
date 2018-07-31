@@ -18,7 +18,7 @@ tokens = [
     'IDENTIFER', 'NUMBER',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
-    'GT', 'LT', 'GE', 'LE', 'EQ',
+    'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
     'LPAREN','RPAREN',
     'COMMA',
     'NEWLINE',
@@ -41,6 +41,7 @@ t_LT = r'<'
 t_GE = r'>='
 t_LE = r'<='
 t_EQ = r'=='
+t_NE = r'!='
 
 t_COMMA = r','
 

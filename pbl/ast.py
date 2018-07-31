@@ -111,6 +111,7 @@ class Compare(Node):
     LT = '<'
     LE = '<='
     EQ = '=='
+    NE = '!='
 
     def __init__(self, left, right, type):
         self.left = left
@@ -131,6 +132,8 @@ class Compare(Node):
             lst.append(compiler.LE())
         elif self.type == self.EQ:
             lst.append(compiler.EQ())
+        elif self.type == self.NE:
+            lst.append(compiler.NE())
         else:
             raise Exception('Invliad operation: %s' % self.type)
 
