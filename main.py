@@ -1,34 +1,47 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
+import sys
+import click
 from pbl import Pbl
 
-SCRIPT = '''\
-fn1 = fn(v) do
-    v += 2
+@click.command()
+@click.option('--debug', default=False, help='Show debug info.', is_flag=True)
+@click.argument('file')
+def main(debug, file):
+    script = get_script(file)
+    if debug:
+        print('\n------- script  -------')
+        print(script)
 
-    return v
-end
+    pbl = Pbl()
 
-a = fn1(1)
-'''
+    tree = pbl.parse(script)
+    if debug:
+        print('\n------- AST -------')
+        print(tree)
 
-if __name__ == '__main__':
-    pbl = Pbl(10)
-
-    tree = pbl.parse(SCRIPT)
     bytecode = pbl.compile(tree)
+    if debug:
+        print('\n------- bytecode -------')
+        print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
 
-    print('\n------- script --------')
-    print(SCRIPT)
-
-    print('\n------- AST --------')
-    print(tree)
-
-    print('\n------- bytecode --------')
-    print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
-
-    print('\n------- run --------')
     frame = pbl.run(bytecode, debug=True)
 
-    print(frame)
+    if debug:
+        print('\n------- frame -------')
+        print(frame)
+
+def get_script(path):
+    current_path = os.getcwd()
+    file_path = os.path.join(current_path, path)
+
+    script = ''
+    with open(file_path) as f:
+        script = f.read()
+
+    return script
+
+if __name__ == '__main__':
+    main()
