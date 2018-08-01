@@ -31,6 +31,8 @@ class Opcode(Enum):
     DIV = 6
     # SET A: HASH(A) = S(-1)
     SET = 7
+    # PSET A: parent HASH(A) = S(-1)
+    PSET = 106
     # GET A: S(-1) = HASH(A)
     GET = 8
     # JMPT A: if S(-1) then R(PC) = A
@@ -165,8 +167,27 @@ class SET(Instruction):
 
     def run(self, vm):
         vm.frame.hash[self.name] = vm.stack[vm.reg.SP - 1]
-#        vm.reg.SP -= 1
         vm.reg.PC += 1
+
+class PSET(Instruction):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.name)
+
+    def run(self, vm):
+        self._set(vm.frame, self.name, vm.stack[vm.reg.SP - 1])
+        vm.reg.PC += 1
+
+    def _set(self, frame, key, value):
+        if key in frame.hash:
+            frame.hash[key] = value
+        elif frame.parent:
+            return self._set(frame.parent, key, value)
+        else:
+            raise Exception("'%s' is not defined" % key)
 
 class GET(Instruction):
 

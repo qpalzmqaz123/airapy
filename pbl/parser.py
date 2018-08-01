@@ -84,6 +84,26 @@ def p_stmt_expr_div_assign(p):
     '''assign_stmt : IDENTIFER DIVEQ expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.DIV))
 
+def p_stmt_expr_assign_parent(p):
+    '''assign_stmt : PARENT_IDENTIFER EQUALS expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), p[3], True)
+
+def p_stmt_expr_add_assign_parent(p):
+    '''assign_stmt : PARENT_IDENTIFER ADDEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.ADD), True)
+
+def p_stmt_expr_sub_assign_parent(p):
+    '''assign_stmt : PARENT_IDENTIFER SUBEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.SUB), True)
+
+def p_stmt_expr_mul_assign_parent(p):
+    '''assign_stmt : PARENT_IDENTIFER MULEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.MUL), True)
+
+def p_stmt_expr_div_assign_parent(p):
+    '''assign_stmt : PARENT_IDENTIFER DIVEQ expr_stmt'''
+    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.DIV), True)
+
 def p_expr_stmt_gt(p):
     '''test_stmt : expr_stmt GT expr_stmt'''
     p[0] = ast.Compare(p[1], p[3], ast.Compare.GT)

@@ -97,13 +97,17 @@ class BinOp(Node):
 
 class Assign(Node):
 
-    def __init__(self, variable, value):
+    def __init__(self, variable, value, from_parent=False):
         self.variable = variable
         self.value = value
+        self.from_parent = from_parent
 
     def compile(self, lst):
         self.value.compile(lst)
-        lst.append(compiler.SET(self.variable.name))
+        if self.from_parent:
+            lst.append(compiler.PSET(self.variable.name))
+        else:
+            lst.append(compiler.SET(self.variable.name))
 
 class Compare(Node):
     GT = '>'

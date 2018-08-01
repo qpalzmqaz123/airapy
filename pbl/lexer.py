@@ -17,7 +17,7 @@ reserved = {
 }
 
 tokens = [
-    'IDENTIFER', 'NUMBER',
+    'IDENTIFER', 'PARENT_IDENTIFER', 'NUMBER',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
@@ -49,6 +49,11 @@ t_COMMA = r','
 
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
+
+def t_PARENT_IDENTIFER(t):
+    r'@[a-zA-Z_][a-zA-Z_0-9]*'
+    t.value = t.value[1:]
+    return t
 
 def t_IDENTIFER(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
