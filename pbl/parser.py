@@ -68,6 +68,10 @@ def p_expr_stmt_string(p):
     '''expr_stmt : STRING'''
     p[0] = ast.String(p[1])
 
+def p_expr_stmt_nil(p):
+    '''expr_stmt : NIL'''
+    p[0] = ast.Nil()
+
 def p_stmt_expr_assign(p):
     '''assign_stmt : IDENTIFER EQUALS expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), p[3])

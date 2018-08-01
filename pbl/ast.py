@@ -64,6 +64,11 @@ class String(Node):
     def compile(self, lst):
         lst.append(compiler.PUSH(self.value))
 
+class Nil(Node):
+
+    def compile(self, lst):
+        lst.append(compiler.PUSH(None))
+
 class Variable(Node):
 
     def __init__(self, name):

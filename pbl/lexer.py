@@ -14,6 +14,7 @@ reserved = {
    'else': 'ELSE',
    'break': 'BREAK',
    'continue': 'CONTINUE',
+   'nil': 'NIL',
 }
 
 tokens = [
