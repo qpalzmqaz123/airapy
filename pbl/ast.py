@@ -294,3 +294,8 @@ class Break(Node):
 
     def compile(self, lst):
         lst.append(compiler.POPL())
+
+class Continue(Node):
+
+    def compile(self, lst):
+        lst.append(compiler.CONT())

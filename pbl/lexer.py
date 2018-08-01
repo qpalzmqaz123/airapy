@@ -13,6 +13,7 @@ reserved = {
    'if': 'IF',
    'else': 'ELSE',
    'break': 'BREAK',
+   'continue': 'CONTINUE',
 }
 
 tokens = [

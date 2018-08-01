@@ -45,3 +45,33 @@ class TestWhile(BaseTest):
         end
         '''
         assert self.vm.frame.hash['sum'] == 2
+
+    def test_2(self):
+        '''
+        a = 0
+        sum = 0
+
+        while a < 5 do
+            a += 1
+            continue
+            sum += 1
+        end
+        '''
+        assert self.vm.frame.hash['sum'] == 0
+
+    def test_2(self):
+        '''
+        a = 0
+        sum = 0
+
+        while a < 5 do
+            a += 1
+
+            if a > 2 do
+                continue
+            end
+
+            sum += 1
+        end
+        '''
+        assert self.vm.frame.hash['sum'] == 2
