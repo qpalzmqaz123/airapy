@@ -11,8 +11,6 @@ class Opcode(Enum):
     NOP = 0
     # PUSH A: S(-1) = A
     PUSH = 1
-    # PUSHR A: S(-1) = R(A)
-    PUSHR = 100
     # PUSHL A: frame.loop.append((R(PC) + 1, A))
     PUSHL = 103
     # POP: pop S(-1)
@@ -94,19 +92,6 @@ class PUSH(Instruction):
 
     def run(self, vm):
         vm.stack[vm.reg.SP] = self.source
-        vm.reg.SP += 1
-        vm.reg.PC += 1
-
-class PUSHR(Instruction):
-
-    def __init__(self, source):
-        self.source = source
-
-    def __str__(self):
-        return '%-6s %s' % (type(self).__name__, self.source)
-
-    def run(self, vm):
-        vm.stack[vm.reg.SP] = vm.reg[self.source]
         vm.reg.SP += 1
         vm.reg.PC += 1
 

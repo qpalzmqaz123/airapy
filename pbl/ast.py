@@ -284,11 +284,9 @@ class Call(Node):
 
     def compile(self, lst):
         # ...
-        # SP
         # ... (args)
         # ... (function body)
-        lst.append(compiler.PUSHR('SP'))
-
+        # ...
         self.args.compile(lst)
         self.fn.compile(lst)
 
