@@ -5,7 +5,7 @@ from .base import BaseTest
 
 class TestWhile(BaseTest):
 
-    def test_1(self):
+    def test_base(self):
         '''
         a = 0
         sum = 0
@@ -17,7 +17,7 @@ class TestWhile(BaseTest):
         '''
         assert self.vm.frame.hash['sum'] == 5
 
-    def test_2(self):
+    def test_break(self):
         '''
         a = 0
         sum = 0
@@ -30,7 +30,7 @@ class TestWhile(BaseTest):
         '''
         assert self.vm.frame.hash['sum'] == 1
 
-    def test_2(self):
+    def test_if_break(self):
         '''
         a = 0
         sum = 0
@@ -46,7 +46,7 @@ class TestWhile(BaseTest):
         '''
         assert self.vm.frame.hash['sum'] == 2
 
-    def test_2(self):
+    def test_continue(self):
         '''
         a = 0
         sum = 0
@@ -59,7 +59,7 @@ class TestWhile(BaseTest):
         '''
         assert self.vm.frame.hash['sum'] == 0
 
-    def test_2(self):
+    def test_if_continue(self):
         '''
         a = 0
         sum = 0
