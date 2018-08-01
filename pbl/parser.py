@@ -37,7 +37,7 @@ def p_stmt_list(p):
 
 def p_stmt_newline(p):
     '''stmt : NEWLINE'''
-    pass
+    p[0] = ast.Block()
 
 def p_stmt_expr(p):
     '''stmt : expr_stmt NEWLINE

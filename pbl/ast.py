@@ -230,6 +230,7 @@ class Function(Node):
                 index += 1
 
         self.body.compile(lst)
+        lst.append(compiler.RET())
         index_b = lst.lastIndex + 1
 
         lst.append(compiler.MKFN(index_a + 1))
