@@ -230,6 +230,7 @@ class Function(Node):
                 index += 1
 
         self.body.compile(lst)
+        lst.append(compiler.PUSH(None))
         lst.append(compiler.RET())
         index_b = lst.lastIndex + 1
 
