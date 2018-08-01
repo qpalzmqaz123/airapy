@@ -53,6 +53,7 @@ t_RPAREN  = r'\)'
 def t_STRING(t):
     r"'([^']|(\'))*'"
     t.value = t.value[1:-1]
+    t.value = t.value.replace("\\'", "'")
     return t
 
 def t_PARENT_IDENTIFER(t):
