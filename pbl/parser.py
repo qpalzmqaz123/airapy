@@ -183,8 +183,12 @@ def p_if_else_stmt(p):
 # TODO elseif
 
 def p_return_stmt(p):
-    '''return_stmt : RETURN expr_stmt'''
-    p[0] = ast.Return(p[2])
+    '''return_stmt : RETURN expr_stmt
+                   | RETURN'''
+    if len(p) == 3:
+        p[0] = ast.Return(p[2])
+    else:
+        p[0] = ast.Return(None)
 
 def p_break_stmt(p):
     '''break_stmt : BREAK'''
