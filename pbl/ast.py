@@ -289,3 +289,8 @@ class Call(Node):
         self.fn.compile(lst)
 
         lst.append(compiler.CALL())
+
+class Break(Node):
+
+    def compile(self, lst):
+        lst.append(compiler.POPL())

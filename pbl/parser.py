@@ -43,7 +43,8 @@ def p_stmt_expr(p):
     '''stmt : expr_stmt NEWLINE
             | while_stmt NEWLINE
             | if_stmt NEWLINE
-            | return_stmt NEWLINE'''
+            | return_stmt NEWLINE
+            | break_stmt NEWLINE'''
     p[0] = p[1]
 
 def p_stmt_exprs(p):
@@ -183,6 +184,10 @@ def p_if_else_stmt(p):
 def p_return_stmt(p):
     '''return_stmt : RETURN expr_stmt'''
     p[0] = ast.Return(p[2])
+
+def p_break_stmt(p):
+    '''break_stmt : BREAK'''
+    p[0] = ast.Break()
 
 def p_error(p):
     if p:

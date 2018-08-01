@@ -12,6 +12,7 @@ reserved = {
    'return': 'RETURN',
    'if': 'IF',
    'else': 'ELSE',
+   'break': 'BREAK',
 }
 
 tokens = [
