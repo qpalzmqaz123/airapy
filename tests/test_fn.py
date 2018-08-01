@@ -63,3 +63,15 @@ class TestFn(BaseTest):
         a = fn1()
         '''
         assert self.vm.frame.hash['a'] == None
+
+    def test_read_global(self):
+        '''
+        g = 1
+
+        fn1 = fn() do
+            return g
+        end
+
+        a = fn1()
+        '''
+        assert self.vm.frame.hash['a'] == 1
