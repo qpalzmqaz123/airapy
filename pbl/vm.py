@@ -19,6 +19,7 @@ class Frame(object):
 
     def __init__(self):
         self.hash = {}
+        self.loop = []
         self.reg = Register()
 
     def __repr__(self):

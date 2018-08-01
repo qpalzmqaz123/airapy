@@ -12,10 +12,16 @@ class Opcode(Enum):
     PUSH = 1
     # PUSHR A: S(-1) = R(A)
     PUSHR = 100
+    # PUSHL A: frame.loop.append((R(PC) + 1, A))
+    PUSHL = 103
     # POP: pop S(-1)
     POP = 2
     # POPN: pop S(-1) ... S(-n)
     POPN = 101
+    # POPL: frame.loop.pop()
+    POPL = 104
+    # CONT: R(PC) = frame.loop[-1]
+    CONT = 105
     # ADD: S(-2) = S(-2) + S(-1)
     ADD = 3
     # SUB: S(-2) = S(-2) - S(-1)
@@ -320,3 +326,30 @@ class CALL(Instruction):
         vm.push_frame(frame)
 
         vm.reg.PC = vm.stack[vm.reg.SP - 1]
+
+class PUSHL(Instruction):
+
+    def __init__(self, index):
+        self.index = index
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.index)
+
+    def run(self, vm):
+        vm.reg.PC += 1
+
+        vm.frame.loop.append((vm.reg.PC, self.index))
+
+class POPL(Instruction):
+
+    def run(self, vm):
+        (pc, index) = vm.frame.loop.pop()
+
+        vm.reg.PC = index + 1
+
+class CONT(Instruction):
+
+    def run(self, vm):
+        (pc, index) = vm.frame.loop[-1]
+
+        vm.reg.PC = pc

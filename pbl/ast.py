@@ -144,12 +144,19 @@ class While(Node):
         self.body = body
 
     def compile(self, lst):
+        #   PUSHL (push loop)
         # a ... (condition)
         # b JMPF c
         #   ...
-        #   JMP a
-        # c ...
-        index_a = lst.lastIndex + 1
+        #   POPL (break)
+        #   ...
+        #   CONT (continue)
+        #   ...
+        #   CONT
+        # c POPL
+        #   ...
+        index_a = lst.lastIndex + 2
+        lst.append(compiler.PUSHL(-1))
 
         self.condition.compile(lst)
 
@@ -157,10 +164,13 @@ class While(Node):
         lst.append(compiler.JMPF(-1))
 
         self.body.compile(lst)
-        lst.append(compiler.JMP(index_a))
+
+        lst.append(compiler.CONT())
 
         index_c = lst.lastIndex + 1
+        lst.append(compiler.POPL())
 
+        lst[index_a - 1].index = index_c
         lst[index_b].index = index_c
 
 class If(Node):
