@@ -28,7 +28,6 @@ def main(debug, file):
         print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
 
     frame = pbl.run(bytecode, debug=True)
-
     if debug:
         print('\n------- frame -------')
         print(frame)
