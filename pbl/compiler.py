@@ -153,7 +153,7 @@ class MUL(Instruction):
 class DIV(Instruction):
 
     def run(self, vm):
-        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] / vm.stack[vm.reg.SP - 1]
+        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] // vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 

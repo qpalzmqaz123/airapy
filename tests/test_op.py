@@ -22,7 +22,12 @@ class TestBinOp(BaseTest):
 
     def test_sub(self):
         '''3 / 2'''
-        assert self.vm.stack[0] == 1.5
+        assert self.vm.stack[0] == 1
+        assert self.vm.reg.SP == 1
+
+    def test_sub_1(self):
+        '''4 / 2'''
+        assert self.vm.stack[0] == 2
         assert self.vm.reg.SP == 1
 
     def test_gt(self):
