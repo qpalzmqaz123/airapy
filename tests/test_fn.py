@@ -75,3 +75,27 @@ class TestFn(BaseTest):
         a = fn1()
         '''
         assert self.vm.frame.hash['a'] == 1
+
+    def test_set_global(self):
+        '''
+        g = 1
+
+        fn1 = fn() do
+            @g = 2
+        end
+
+        a = fn1()
+        '''
+        assert self.vm.frame.hash['g'] == 2
+
+    def test_set_global_1(self):
+        '''
+        g = 1
+
+        fn1 = fn() do
+            @g += 2
+        end
+
+        a = fn1()
+        '''
+        assert self.vm.frame.hash['g'] == 3
