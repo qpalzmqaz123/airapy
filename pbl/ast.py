@@ -227,6 +227,8 @@ class Function(Node):
                 lst.append(compiler.SET(k))
                 lst.append(compiler.POP())
 
+                index += 1
+
         self.body.compile(lst)
         index_b = lst.lastIndex + 1
 
