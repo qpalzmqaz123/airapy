@@ -14,3 +14,13 @@ class TestObj(BaseTest):
         'abc'
         '''
         assert self.vm.stack[0] == 'abc'
+
+    def test_string_escape(self):
+        '''
+        'ab\\'c'
+        '''
+        assert self.vm.stack[0] == 'ab\'c'
+
+    def test_nil(self):
+        '''nil'''
+        assert self.vm.stack[0] == None
