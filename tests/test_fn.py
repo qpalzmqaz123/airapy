@@ -44,3 +44,22 @@ class TestFn(BaseTest):
         a = fn1(2, 3, 4)
         '''
         assert self.vm.frame.hash['a'] == 9
+
+    def test_without_return(self):
+        '''
+        fn1 = fn() do
+        end
+
+        a = fn1()
+        '''
+        assert self.vm.frame.hash['a'] == None
+
+    def test_return_nil(self):
+        '''
+        fn1 = fn() do
+            return
+        end
+
+        a = fn1()
+        '''
+        assert self.vm.frame.hash['a'] == None
