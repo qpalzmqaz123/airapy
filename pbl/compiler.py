@@ -3,6 +3,7 @@
 
 from enum import Enum, unique
 from .vm import Frame
+from . import object as obj
 
 @unique
 class Opcode(Enum):
@@ -191,9 +192,17 @@ class GET(Instruction):
         return '%-6s %s' % (type(self).__name__, self.name)
 
     def run(self, vm):
-        vm.stack[vm.reg.SP] = vm.frame.hash[self.name]
+        vm.stack[vm.reg.SP] = self._get(vm.frame, self.name)
         vm.reg.SP += 1
         vm.reg.PC += 1
+
+    def _get(self, frame, key):
+        if key in frame.hash:
+            return frame.hash[key]
+        elif frame.parent:
+            return self._get(frame.parent, key)
+        else:
+            raise Exception("'%s' is not defined" % key)
 
 class JMPT(Instruction):
 
@@ -315,17 +324,19 @@ class MKFN(Instruction):
         return '%-6s %s' % (type(self).__name__, self.index)
 
     def run(self, vm):
-        vm.stack[vm.reg.SP] = self.index
+        vm.stack[vm.reg.SP] = obj.Function(self.index, vm.frame)
         vm.reg.SP += 1
         vm.reg.PC += 1
 
 class CALL(Instruction):
 
     def run(self, vm):
-        frame = Frame()
+        fn = vm.stack[vm.reg.SP - 1]
+
+        frame = Frame(fn.parent_frame)
         vm.push_frame(frame)
 
-        vm.reg.PC = vm.stack[vm.reg.SP - 1]
+        vm.reg.PC = fn.index
 
 class PUSHL(Instruction):
 

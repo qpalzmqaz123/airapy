@@ -17,10 +17,11 @@ class Register(object):
 
 class Frame(object):
 
-    def __init__(self):
+    def __init__(self, parent=None):
         self.hash = {}
         self.loop = []
         self.reg = Register()
+        self.parent = parent
 
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, str(self.__dict__))
