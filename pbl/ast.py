@@ -80,6 +80,14 @@ class Variable(Node):
     def compile(self, lst):
         lst.append(compiler.GET(self.name))
 
+class Boolean(Node):
+
+    def __init__(self, value):
+        self.value = bool(value)
+
+    def compile(self, lst):
+        lst.append(compiler.PUSH(self.value))
+
 class BinOp(Node):
     ADD = '+'
     SUB = '-'

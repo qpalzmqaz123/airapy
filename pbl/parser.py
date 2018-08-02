@@ -79,6 +79,14 @@ def p_expr_stmt_nil(p):
     '''expr_stmt : NIL'''
     p[0] = ast.Nil()
 
+def p_expr_stmt_true(p):
+    '''expr_stmt : TRUE'''
+    p[0] = ast.Boolean(True)
+
+def p_expr_stmt_false(p):
+    '''expr_stmt : FALSE'''
+    p[0] = ast.Boolean(False)
+
 def p_stmt_expr_assign(p):
     '''assign_stmt : IDENTIFER EQUALS expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), p[3])
