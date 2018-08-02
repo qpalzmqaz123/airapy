@@ -36,11 +36,8 @@ def get_script(path):
     current_path = os.getcwd()
     file_path = os.path.join(current_path, path)
 
-    script = ''
     with open(file_path) as f:
-        script = f.read()
-
-    return script
+        return f.read()
 
 if __name__ == '__main__':
     main()
