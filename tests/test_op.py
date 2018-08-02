@@ -149,3 +149,45 @@ class TestAssign(BaseTest):
         assert self.vm.frame.hash['a'] == 1
         assert self.vm.frame.hash['b'] == 2
         assert self.vm.frame.hash['c'] == 3
+
+class TestTest(BaseTest):
+
+    def test_and_0(self):
+        '''a = 0 and 1'''
+        assert self.vm.frame.hash['a'] == False
+
+    def test_and_1(self):
+        '''a = 1 and 1'''
+        assert self.vm.frame.hash['a'] == True
+
+    def test_or_0(self):
+        '''a = 0 or 1'''
+        assert self.vm.frame.hash['a'] == True
+
+    def test_or_1(self):
+        '''a = 0 or 0'''
+        assert self.vm.frame.hash['a'] == False
+
+    def test_not_0(self):
+        '''a = not 1'''
+        assert self.vm.frame.hash['a'] == False
+
+    def test_not_1(self):
+        '''a = not 0'''
+        assert self.vm.frame.hash['a'] == True
+
+    def test_complex_0(self):
+        '''a = 1 or 0 and 0'''
+        assert self.vm.frame.hash['a'] == True
+
+    def test_complex_1(self):
+        '''a = 1 and 0 and 0'''
+        assert self.vm.frame.hash['a'] == False
+
+    def test_complex_2(self):
+        '''a = 1 or 2 and not 1'''
+        assert self.vm.frame.hash['a'] == False
+
+    def test_complex_2(self):
+        '''a = 1 or 2 and not 0'''
+        assert self.vm.frame.hash['a'] == True
