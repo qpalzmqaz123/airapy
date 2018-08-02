@@ -21,7 +21,7 @@ reserved = {
 }
 
 tokens = [
-    'IDENTIFER', 'PARENT_IDENTIFER', 'NUMBER', 'STRING',
+    'IDENTIFER', 'PARENT_IDENTIFER', 'NUMBER', 'STRING', 'FLOAT',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
@@ -31,6 +31,7 @@ tokens = [
 ] + list(reserved.values())
 
 t_NUMBER  = r'[0-9]+'
+t_FLOAT   = r'[0-9]+\.[0-9]+'
 
 t_PLUS    = r'\+'
 t_MINUS   = r'-'

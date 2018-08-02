@@ -159,7 +159,10 @@ class MUL(Instruction):
 class DIV(Instruction):
 
     def run(self, vm):
-        vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] // vm.stack[vm.reg.SP - 1]
+        if type(vm.stack[vm.reg.SP - 2]) == float or type(vm.stack[vm.reg.SP - 1]) == float:
+            vm.stack[vm.reg.SP - 2] = float(vm.stack[vm.reg.SP - 2] / vm.stack[vm.reg.SP - 1])
+        else:
+            vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] // vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 

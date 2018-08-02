@@ -56,6 +56,9 @@ class Float(Node):
     def __init__(self, f):
         self.value = f
 
+    def compile(self, lst):
+        lst.append(compiler.PUSH(float(self.value)))
+
 class String(Node):
 
     def __init__(self, s):

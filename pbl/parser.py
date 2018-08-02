@@ -67,6 +67,10 @@ def p_expr_stmt_number(p):
     '''expr_stmt : NUMBER'''
     p[0] = ast.Int(int(p[1]))
 
+def p_expr_stmt_float(p):
+    '''expr_stmt : FLOAT'''
+    p[0] = ast.Float(float(p[1]))
+
 def p_expr_stmt_string(p):
     '''expr_stmt : STRING'''
     p[0] = ast.String(p[1])
