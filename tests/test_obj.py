@@ -24,3 +24,7 @@ class TestObj(BaseTest):
     def test_nil(self):
         '''nil'''
         assert self.vm.stack[0] == None
+
+    def test_float(self):
+        '''1.1'''
+        assert self.vm.stack[0] == 1.1
