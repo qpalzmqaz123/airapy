@@ -27,7 +27,7 @@ tokens = [
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
-    'LPAREN','RPAREN',
+    'LPAREN','RPAREN', 'LSQUARE', 'RSQUARE',
     'COMMA',
     'NEWLINE',
 ] + list(reserved.values())
@@ -56,6 +56,8 @@ t_COMMA = r','
 
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
+t_LSQUARE = r'\['
+t_RSQUARE = r'\]'
 
 def t_STRING(t):
     r"'([^']|(\'))*'"

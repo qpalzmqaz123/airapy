@@ -56,7 +56,8 @@ def p_stmt_exprs(p):
                  | test_stmt
                  | binop_stmt
                  | fn_stmt
-                 | call_stmt'''
+                 | call_stmt
+                 | array_stmt'''
     p[0] = p[1]
 
 def p_expr_stmt_identifer(p):
@@ -215,6 +216,18 @@ def p_call_stmt_empty_args(p):
     '''call_stmt : IDENTIFER LPAREN RPAREN'''
     p[0] = ast.Call(ast.Variable(p[1]), ast.Arguments())
 
+def p_array_stmt_empty_item(p):
+    '''array_stmt : LSQUARE RSQUARE'''
+    p[0] = ast.Array()
+
+def p_array_stmt_single_item(p):
+    '''array_stmt : LSQUARE expr_stmt RSQUARE'''
+    p[0] = ast.Array().append(p[2])
+
+def p_array_stmt_multi_item(p):
+    '''array_stmt : LSQUARE array_expr_stmt_list expr_stmt RSQUARE'''
+    p[0] = p[2].append(p[3])
+
 def p_stmt_while(p):
     '''while_stmt : WHILE expr_stmt DO stmt_list END'''
     p[0] = ast.While(p[2], p[4])
@@ -224,6 +237,14 @@ def p_expr_stmt_list(p):
                       | expr_stmt_list expr_stmt COMMA'''
     if len(p) == 3:
         p[0] = ast.Arguments().append(p[1])
+    elif len(p) == 4:
+        p[0] = p[1].append(p[2])
+
+def p_array_expr_stmt_list(p):
+    '''array_expr_stmt_list : expr_stmt COMMA
+                            | array_expr_stmt_list expr_stmt COMMA'''
+    if len(p) == 3:
+        p[0] = ast.Array().append(p[1])
     elif len(p) == 4:
         p[0] = p[1].append(p[2])
 

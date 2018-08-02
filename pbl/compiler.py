@@ -67,6 +67,8 @@ class Opcode(Enum):
     MKFN = 19
     # CALL: R(PC) = S(-1) then create a new frame
     CALL = 20
+    # MKARR A: S(-A) = [S(-A) ... S(-1)]
+    MKARR = 21
 
 class InstructionList(list):
 
@@ -399,3 +401,21 @@ class CONT(Instruction):
         (pc, index) = vm.frame.loop[-1]
 
         vm.reg.PC = pc
+
+class MKARR(Instruction):
+
+    def __init__(self, cnt):
+        self.cnt = cnt
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.cnt)
+
+    def run(self, vm):
+        vm.reg.PC += 1
+
+        arr = obj.Array()
+        for i in range(self.cnt):
+            arr.append(vm.stack[vm.reg.SP - self.cnt + i])
+
+        vm.stack[vm.reg.SP - self.cnt] = arr
+        vm.reg.SP -= self.cnt - 1

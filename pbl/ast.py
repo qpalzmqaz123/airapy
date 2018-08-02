@@ -88,6 +88,33 @@ class Boolean(Node):
     def compile(self, lst):
         lst.append(compiler.PUSH(self.value))
 
+class Array(Node):
+
+    def __init__(self):
+        self.list = []
+
+    def append(self, node):
+        self.list.append(node)
+
+        return self
+
+    def __repr__(self):
+        values = ['list=%s' % self.list]
+
+        return type(self).__name__ + '(' + ', '.join(values) + ')'
+
+    def __iter__(self):
+        return iter(self.list)
+
+    def __len__(self):
+        return len(self.list)
+
+    def compile(self, lst):
+        for node in self:
+            node.compile(lst)
+
+        lst.append(compiler.MKARR(len(self.list)))
+
 class BinOp(Node):
     ADD = '+'
     SUB = '-'
