@@ -15,6 +15,9 @@ reserved = {
    'break': 'BREAK',
    'continue': 'CONTINUE',
    'nil': 'NIL',
+   'and': 'AND',
+   'or': 'OR',
+   'not': 'NOT',
 }
 
 tokens = [

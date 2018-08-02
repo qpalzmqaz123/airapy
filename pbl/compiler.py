@@ -53,6 +53,12 @@ class Opcode(Enum):
     LT = 15
     # LE: S(-1) = S(-2) <= S(-1)
     LE = 16
+    # AND: S(-1) = S(-2) and S(-1)
+    AND = 107
+    # OR: S(-1) = S(-2) OR S(-1)
+    OR = 108
+    # NOT: S(-1) = not S(-1)
+    NOT = 109
     # RET: return S(-1)
     RET = 17
     # DUP A: duplicate S(A) -> S(-1)
@@ -293,6 +299,26 @@ class LE(Instruction):
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] <= vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class AND(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = bool(vm.stack[vm.reg.SP - 2] and vm.stack[vm.reg.SP - 1])
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class OR(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 2] = bool(vm.stack[vm.reg.SP - 2] or vm.stack[vm.reg.SP - 1])
+        vm.reg.SP -= 1
+        vm.reg.PC += 1
+
+class NOT(Instruction):
+
+    def run(self, vm):
+        vm.stack[vm.reg.SP - 1] = bool(not vm.stack[vm.reg.SP - 1])
         vm.reg.PC += 1
 
 class RET(Instruction):

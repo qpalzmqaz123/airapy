@@ -149,6 +149,29 @@ class Compare(Node):
         else:
             raise Exception('Invliad operation: %s' % self.type)
 
+class Test(Node):
+    AND = 'and'
+    OR = 'or'
+    NOT = 'not'
+
+    def __init__(self, left, right, type):
+        self.left = left
+        self.right = right
+        self.type = type
+
+    def compile(self, lst):
+        self.left.compile(lst)
+        self.right.compile(lst)
+
+        if self.type == self.AND:
+            lst.append(compiler.AND())
+        elif self.type == self.OR:
+            lst.append(compiler.OR())
+        elif self.type == self.NOT:
+            lst.append(compiler.NOT())
+        else:
+            raise Exception('Invliad type: %s' % self.type)
+
 class While(Node):
 
     def __init__(self, condition, body):
