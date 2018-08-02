@@ -191,8 +191,12 @@ class TestTest(BaseTest):
 
     def test_complex_2(self):
         '''a = 1 or 2 and not 1'''
-        assert self.vm.frame.hash['a'] == False
+        assert self.vm.frame.hash['a'] == True
 
-    def test_complex_2(self):
+    def test_complex_3(self):
         '''a = 1 or 2 and not 0'''
         assert self.vm.frame.hash['a'] == True
+
+    def test_complex_4(self):
+        '''a = not false and false'''
+        assert self.vm.frame.hash['a'] == False

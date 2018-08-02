@@ -28,3 +28,11 @@ class TestObj(BaseTest):
     def test_float(self):
         '''1.1'''
         assert self.vm.stack[0] == 1.1
+
+    def test_true(self):
+        '''true'''
+        assert self.vm.stack[0] == True
+
+    def test_false(self):
+        '''false'''
+        assert self.vm.stack[0] == False
