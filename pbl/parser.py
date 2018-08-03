@@ -94,6 +94,10 @@ def p_stmt_expr_assign(p):
     '''assign_stmt : IDENTIFER EQUALS expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), p[3])
 
+def p_stmt_expr_assign_property(p):
+    '''assign_stmt : property_stmt EQUALS expr_stmt'''
+    p[0] = ast.Assign(p[1], p[3])
+
 def p_stmt_expr_add_assign(p):
     '''assign_stmt : IDENTIFER ADDEQ expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.ADD))

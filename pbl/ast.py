@@ -86,10 +86,10 @@ class Property(Node):
         self.target = target
         self.key = key
 
-    def compile(self, lst):
-        self.target.compile(lst)
-        self.key.compile(lst)
-        lst.append(compiler.GETP())
+    def compile(self, lst, is_get=True):
+            self.target.compile(lst)
+            self.key.compile(lst)
+            lst.append(compiler.GETP() if is_get else compiler.SETP())
 
 class Boolean(Node):
 
@@ -161,10 +161,14 @@ class Assign(Node):
 
     def compile(self, lst):
         self.value.compile(lst)
-        if self.from_parent:
-            lst.append(compiler.PSET(self.variable.name))
+
+        if isinstance(self.variable, Variable):
+            if self.from_parent:
+                lst.append(compiler.PSET(self.variable.name))
+            else:
+                lst.append(compiler.SET(self.variable.name))
         else:
-            lst.append(compiler.SET(self.variable.name))
+            self.variable.compile(lst, False)
 
 class Compare(Node):
     GT = '>'

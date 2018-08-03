@@ -33,4 +33,10 @@ class Array(Object):
         elif attr == 'length':
             return len(self.list)
         else:
-            raise Exception("Invalid attr '%s'" % attr)
+            return super().__getattr__(attr)
+
+    def __setattr__(self, attr, value):
+        if re.match(r'^\d+$', attr):
+            self.list[int(attr)] = value
+        else:
+            super().__setattr__(attr, value)
