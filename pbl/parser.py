@@ -16,7 +16,7 @@ precedence = (
     ('left', 'GT', 'GE', 'LT', 'LE', 'EQ', 'NE'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
-    ('left', 'LSQUARE', 'RSQUARE'),
+    ('left', 'PERIOD', 'LSQUARE', 'RSQUARE'),
 )
 
 def p_program(p):
@@ -235,8 +235,12 @@ def p_array_stmt_multi_item(p):
     p[0] = p[2].append(p[3])
 
 def p_property_stmt(p):
-    '''property_stmt : expr_stmt LSQUARE expr_stmt RSQUARE'''
-    p[0] = ast.Property(p[1], p[3])
+    '''property_stmt : expr_stmt LSQUARE expr_stmt RSQUARE
+                     | expr_stmt PERIOD IDENTIFER'''
+    if len(p) == 5:
+        p[0] = ast.Property(p[1], p[3])
+    else:
+        p[0] = ast.Property(p[1], ast.String(p[3]))
 
 def p_stmt_while(p):
     '''while_stmt : WHILE expr_stmt DO stmt_list END'''

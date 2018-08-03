@@ -28,7 +28,7 @@ tokens = [
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
     'LPAREN','RPAREN', 'LSQUARE', 'RSQUARE',
-    'COMMA',
+    'COMMA', 'PERIOD',
     'NEWLINE',
 ] + list(reserved.values())
 
@@ -52,7 +52,8 @@ t_LE = r'<='
 t_EQ = r'=='
 t_NE = r'!='
 
-t_COMMA = r','
+t_COMMA  = r','
+t_PERIOD = r'\.'
 
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
