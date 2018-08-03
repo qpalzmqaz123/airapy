@@ -99,3 +99,35 @@ class TestFn(BaseTest):
         a = fn1()
         '''
         assert self.vm.frame.hash['g'] == 3
+
+    def test_closure(self):
+        '''
+        fn1 = fn(v) do
+            cnt = 0
+
+            return fn() do
+                @cnt += v
+
+                return cnt
+            end
+        end
+
+        fn2 = fn1(10)
+
+        a = fn2()
+        b = fn2()
+        c = fn2()
+        '''
+        assert self.vm.frame.hash['a'] == 10
+        assert self.vm.frame.hash['b'] == 20
+        assert self.vm.frame.hash['c'] == 30
+
+    def test_call_anonymous_fn(self):
+        '''
+        a = 1
+
+        fn(v) do
+            @a = v
+        end(100)
+        '''
+        assert self.vm.frame.hash['a'] == 100
