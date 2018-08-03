@@ -25,7 +25,7 @@ class TestArr(BaseTest):
         b = a[0]
         c = a[1]
         d = a[2]
-        e = a['length']
+        e = a.length
         '''
         assert self.vm.frame.hash['b'] == 1
         assert self.vm.frame.hash['c'] == 10
