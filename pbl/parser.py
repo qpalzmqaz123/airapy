@@ -294,7 +294,8 @@ def p_callable_stmt_identifer(p):
 
 def p_callable_stmt_misc(p):
     '''callable_stmt : call_stmt
-                     | property_stmt'''
+                     | property_stmt
+                     | fn_stmt'''
     p[0] = p[1]
 
 def p_error(p):
