@@ -16,6 +16,7 @@ precedence = (
     ('left', 'GT', 'GE', 'LT', 'LE', 'EQ', 'NE'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
+    ('left', 'LSQUARE', 'RSQUARE'),
 )
 
 def p_program(p):
@@ -57,7 +58,8 @@ def p_stmt_exprs(p):
                  | binop_stmt
                  | fn_stmt
                  | call_stmt
-                 | array_stmt'''
+                 | array_stmt
+                 | property_stmt'''
     p[0] = p[1]
 
 def p_expr_stmt_identifer(p):
@@ -227,6 +229,10 @@ def p_array_stmt_single_item(p):
 def p_array_stmt_multi_item(p):
     '''array_stmt : LSQUARE array_expr_stmt_list expr_stmt RSQUARE'''
     p[0] = p[2].append(p[3])
+
+def p_property_stmt(p):
+    '''property_stmt : expr_stmt LSQUARE expr_stmt RSQUARE'''
+    p[0] = ast.Property(p[1], p[3])
 
 def p_stmt_while(p):
     '''while_stmt : WHILE expr_stmt DO stmt_list END'''

@@ -69,6 +69,10 @@ class Opcode(Enum):
     CALL = 20
     # MKARR A: S(-A) = [S(-A) ... S(-1)]
     MKARR = 21
+    # SETP: HASH(S(-3))[S(-2)] = S(-1)
+    SETP = 23
+    # GETP: S(-2) = S(-2)[S(-1)]
+    GETP = 24
 
 class InstructionList(list):
 
@@ -419,3 +423,16 @@ class MKARR(Instruction):
 
         vm.stack[vm.reg.SP - self.cnt] = arr
         vm.reg.SP -= self.cnt - 1
+
+class SETP(Instruction):
+    pass
+
+class GETP(Instruction):
+
+    def run(self, vm):
+        vm.reg.PC += 1
+
+        vm.stack[vm.reg.SP - 2] = getattr(vm.stack[vm.reg.SP - 2],
+                                          str(vm.stack[vm.reg.SP - 1]))
+
+        vm.reg.SP -= 1

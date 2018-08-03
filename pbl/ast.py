@@ -80,6 +80,17 @@ class Variable(Node):
     def compile(self, lst):
         lst.append(compiler.GET(self.name))
 
+class Property(Node):
+
+    def __init__(self, target, key):
+        self.target = target
+        self.key = key
+
+    def compile(self, lst):
+        self.target.compile(lst)
+        self.key.compile(lst)
+        lst.append(compiler.GETP())
+
 class Boolean(Node):
 
     def __init__(self, value):

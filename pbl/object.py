@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import re
+
 class Object(object):
     pass
 
@@ -24,3 +26,11 @@ class Array(Object):
 
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, str(self.list))
+
+    def __getattr__(self, attr):
+        if re.match(r'^\d+$', attr):
+            return self.list[int(attr)]
+        elif attr == 'length':
+            return len(self.list)
+        else:
+            raise Exception("Invalid attr '%s'" % attr)
