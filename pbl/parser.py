@@ -211,16 +211,16 @@ def p_fn_stmt_identifer_list(p):
         p[0] = p[1].append(p[2])
 
 def p_call_stmt_multi_args(p):
-    '''call_stmt : IDENTIFER LPAREN expr_stmt_list expr_stmt RPAREN'''
-    p[0] = ast.Call(ast.Variable(p[1]), p[3].append(p[4]))
+    '''call_stmt : callable_stmt LPAREN expr_stmt_list expr_stmt RPAREN'''
+    p[0] = ast.Call(p[1], p[3].append(p[4]))
 
 def p_call_stmt_single_args(p):
-    '''call_stmt : IDENTIFER LPAREN expr_stmt RPAREN'''
-    p[0] = ast.Call(ast.Variable(p[1]), ast.Arguments().append(p[3]))
+    '''call_stmt : callable_stmt LPAREN expr_stmt RPAREN'''
+    p[0] = ast.Call(p[1], ast.Arguments().append(p[3]))
 
 def p_call_stmt_empty_args(p):
-    '''call_stmt : IDENTIFER LPAREN RPAREN'''
-    p[0] = ast.Call(ast.Variable(p[1]), ast.Arguments())
+    '''call_stmt : callable_stmt LPAREN RPAREN'''
+    p[0] = ast.Call(p[1], ast.Arguments())
 
 def p_array_stmt_empty_item(p):
     '''array_stmt : LSQUARE RSQUARE'''
@@ -287,6 +287,15 @@ def p_break_stmt(p):
 def p_continue_stmt(p):
     '''continue_stmt : CONTINUE'''
     p[0] = ast.Continue()
+
+def p_callable_stmt_identifer(p):
+    '''callable_stmt : IDENTIFER'''
+    p[0] = ast.Variable(p[1])
+
+def p_callable_stmt_misc(p):
+    '''callable_stmt : call_stmt
+                     | property_stmt'''
+    p[0] = p[1]
 
 def p_error(p):
     if p:
