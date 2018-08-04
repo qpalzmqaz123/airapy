@@ -304,7 +304,7 @@ class Function(Node):
         # a JMP b
         #   ... (function body)
         # b ...
-        index = -1 - len(self.args)
+        index = -2 - len(self.args)
 
         lst.append(compiler.JMP(-1))
         index_a = lst.lastIndex
@@ -373,9 +373,11 @@ class Call(Node):
     def compile(self, lst):
         # ...
         # ... (args)
+        # ... (nargs)
         # ... (function body)
         # ...
         self.args.compile(lst)
+        lst.append(compiler.PUSH(len(self.args)))
         self.fn.compile(lst)
 
         lst.append(compiler.CALL())

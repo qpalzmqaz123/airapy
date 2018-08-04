@@ -12,6 +12,11 @@ class Function(Object):
         self.index = index
         self.parent_frame = parent_frame
 
+class BuiltinFunction(Object):
+
+    def __init__(self, fn):
+        self.fn = fn
+
 class Array(Object):
 
     def __init__(self):
@@ -19,10 +24,6 @@ class Array(Object):
 
     def append(self, value):
         self.list.append(value)
-
-    @property
-    def length(self):
-        return len(self.list)
 
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, str(self.list))
@@ -40,3 +41,48 @@ class Array(Object):
             self.list[int(attr)] = value
         else:
             super().__setattr__(attr, value)
+
+    @property
+    def length(self):
+        return len(self.list)
+
+    @property
+    def push(self):
+        def _fn(vm):
+            assert vm.stack[vm.reg.SP - 2] == 1
+
+            value = vm.stack[vm.reg.SP - 3]
+            self.list.append(value)
+
+            return value
+
+        return BuiltinFunction(_fn)
+
+    @property
+    def pop(self):
+        def _fn(vm):
+            # remove last element
+            if vm.stack[vm.reg.SP - 2] == 0:
+                value = self.list.pop()
+            elif vm.stack[vm.reg.SP - 2] == 1:
+                value = self.list.pop(vm.stack[vm.reg.SP - 3])
+            else:
+                raise Exception('Invliad args count')
+
+            return value
+
+        return BuiltinFunction(_fn)
+
+    @property
+    def insert(self):
+        def _fn(vm):
+            assert vm.stack[vm.reg.SP - 2] == 2
+
+            index = vm.stack[vm.reg.SP - 4]
+            value = vm.stack[vm.reg.SP - 3]
+
+            self.list.insert(index, value)
+
+            return value
+
+        return BuiltinFunction(_fn)

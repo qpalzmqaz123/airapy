@@ -374,10 +374,23 @@ class CALL(Instruction):
     def run(self, vm):
         fn = vm.stack[vm.reg.SP - 1]
 
-        frame = Frame(fn.parent_frame)
-        vm.push_frame(frame)
+        if isinstance(fn, obj.Function):
+            frame = Frame(fn.parent_frame)
+            vm.push_frame(frame)
 
-        vm.reg.PC = fn.index
+            vm.reg.PC = fn.index
+        elif isinstance(fn, obj.BuiltinFunction):
+            vm.reg.PC += 1
+
+            frame = Frame()
+            vm.push_frame(frame)
+
+            ret_val = fn.fn(vm)
+
+            vm.pop_frame()
+            vm.stack[vm.reg.SP - 1] = ret_val
+        else:
+            raise Exception('value is not callable')
 
 class PUSHL(Instruction):
 
