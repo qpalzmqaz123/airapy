@@ -31,3 +31,25 @@ class TestArr(BaseTest):
         assert self.vm.frame.hash['c'] == 10
         assert self.vm.frame.hash['d'] == 3
         assert self.vm.frame.hash['e'] == 3
+
+    def test_arr_push(self):
+        '''
+        a = [1, 2, 3]
+        a.push(100)
+        '''
+        assert self.vm.frame.hash['a'].list == [1, 2, 3, 100]
+
+    def test_arr_pop(self):
+        '''
+        a = [1, 2, 3, 4, 5]
+        a.pop()
+        a.pop(1)
+        '''
+        assert self.vm.frame.hash['a'].list == [1, 3, 4]
+
+    def test_arr_insert(self):
+        '''
+        a = [1, 2, 3]
+        a.insert(1, 100)
+        '''
+        assert self.vm.frame.hash['a'].list == [1, 100, 2, 3]
