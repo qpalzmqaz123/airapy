@@ -29,7 +29,7 @@ tokens = [
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
     'LPAREN','RPAREN', 'LSQUARE', 'RSQUARE',
     'COMMA', 'PERIOD',
-    'NEWLINE',
+    'NEWLINE', 'COMMENT',
 ] + list(reserved.values())
 
 t_NUMBER  = r'[0-9]+'
@@ -80,6 +80,10 @@ def t_NEWLINE(t):
     r'\n'
     t.lexer.lineno += t.value.count("\n")
     return t
+
+def t_COMMENT(t):
+    r'\#[^\r\n(\r\n)]*'
+    pass
 
 def t_SPACE(t):
     r'\s+'
