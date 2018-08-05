@@ -53,3 +53,35 @@ class TestArr(BaseTest):
         a.insert(1, 100)
         '''
         assert self.vm.frame.hash['a'].list == [1, 100, 2, 3]
+
+    def test_arr_op_add(self):
+        '''
+        a = [1, 2, 3]
+        a[1] += 10
+        b = a[1]
+        '''
+        assert self.vm.frame.hash['b'] == 12
+
+    def test_arr_op_sub(self):
+        '''
+        a = [1, 2, 3]
+        a[1] -= 1
+        b = a[1]
+        '''
+        assert self.vm.frame.hash['b'] == 1
+
+    def test_arr_op_mul(self):
+        '''
+        a = [1, 2, 3]
+        a[1] *= 2
+        b = a[1]
+        '''
+        assert self.vm.frame.hash['b'] == 4
+
+    def test_arr_op_div(self):
+        '''
+        a = [1, 20, 3]
+        a[1] /= 4
+        b = a[1]
+        '''
+        assert self.vm.frame.hash['b'] == 5

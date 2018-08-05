@@ -103,17 +103,33 @@ def p_stmt_expr_add_assign(p):
     '''assign_stmt : IDENTIFER ADDEQ expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.ADD))
 
+def p_stmt_expr_add_assign_property(p):
+    '''assign_stmt : property_stmt ADDEQ expr_stmt'''
+    p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.ADD))
+
 def p_stmt_expr_sub_assign(p):
     '''assign_stmt : IDENTIFER SUBEQ expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.SUB))
+
+def p_stmt_expr_sub_assign_property(p):
+    '''assign_stmt : property_stmt SUBEQ expr_stmt'''
+    p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.SUB))
 
 def p_stmt_expr_mul_assign(p):
     '''assign_stmt : IDENTIFER MULEQ expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.MUL))
 
+def p_stmt_expr_mul_assign_property(p):
+    '''assign_stmt : property_stmt MULEQ expr_stmt'''
+    p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.MUL))
+
 def p_stmt_expr_div_assign(p):
     '''assign_stmt : IDENTIFER DIVEQ expr_stmt'''
     p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.DIV))
+
+def p_stmt_expr_div_assign_property(p):
+    '''assign_stmt : property_stmt DIVEQ expr_stmt'''
+    p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.DIV))
 
 def p_stmt_expr_assign_parent(p):
     '''assign_stmt : PARENT_IDENTIFER EQUALS expr_stmt'''
