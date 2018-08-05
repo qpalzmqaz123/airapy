@@ -29,7 +29,7 @@ tokens = [
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
     'LPAREN','RPAREN', 'LSQUARE', 'RSQUARE', 'LBRACE', 'RBRACE',
     'COMMA', 'PERIOD', 'COLON',
-    'NEWLINE', 'COMMENT',
+    'NEWLINE',
 ] + list(reserved.values())
 
 t_NUMBER  = r'[0-9]+'
