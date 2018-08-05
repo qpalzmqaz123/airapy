@@ -27,8 +27,8 @@ tokens = [
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
-    'LPAREN','RPAREN', 'LSQUARE', 'RSQUARE',
-    'COMMA', 'PERIOD',
+    'LPAREN','RPAREN', 'LSQUARE', 'RSQUARE', 'LBRACE', 'RBRACE',
+    'COMMA', 'PERIOD', 'COLON',
     'NEWLINE', 'COMMENT',
 ] + list(reserved.values())
 
@@ -54,14 +54,17 @@ t_NE = r'!='
 
 t_COMMA  = r','
 t_PERIOD = r'\.'
+t_COLON  = r':'
 
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_LSQUARE = r'\['
 t_RSQUARE = r'\]'
+t_LBRACE  = r'\{'
+t_RBRACE  = r'\}'
 
 def t_STRING(t):
-    r"'([^']|(\'))*'"
+    r"'([^']|(\'))*?'"
     t.value = t.value[1:-1]
     t.value = t.value.replace("\\'", "'")
     return t

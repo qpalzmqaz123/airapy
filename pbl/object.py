@@ -86,3 +86,14 @@ class Array(Object):
             return value
 
         return BuiltinFunction(_fn)
+
+class Hash(Object):
+
+    def __repr__(self):
+        return '%s(%s)' % (type(self).__name__, str(self.__dict__))
+
+    def __getattr__(self, attr):
+        return super().__getattr__(attr)
+
+    def __setattr__(self, attr, value):
+        super().__setattr__(attr, value)

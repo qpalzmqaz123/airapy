@@ -126,6 +126,31 @@ class Array(Node):
 
         lst.append(compiler.MKARR(len(self.list)))
 
+class Hash(Node):
+
+    def __init__(self):
+        self.hash = {}
+
+    def __repr__(self):
+        values = ['hash=%s' % self.hash]
+
+        return type(self).__name__ + '(' + ', '.join(values) + ')'
+
+    def set(self, key_value):
+        self.hash[key_value[0]] = key_value[1]
+
+        return self
+
+    def compile(self, lst):
+
+        items = self.hash.items()
+
+        for key, value in items:
+            key.compile(lst)
+            value.compile(lst)
+
+        lst.append(compiler.MKHASH(len(items)))
+
 class BinOp(Node):
     ADD = '+'
     SUB = '-'

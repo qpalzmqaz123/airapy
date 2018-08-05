@@ -59,6 +59,7 @@ def p_stmt_exprs(p):
                  | fn_stmt
                  | call_stmt
                  | array_stmt
+                 | hash_stmt
                  | property_stmt'''
     p[0] = p[1]
 
@@ -234,6 +235,30 @@ def p_array_stmt_multi_item(p):
     '''array_stmt : LSQUARE array_expr_stmt_list expr_stmt RSQUARE'''
     p[0] = p[2].append(p[3])
 
+def p_hash_stmt_empty_item(p):
+    '''hash_stmt : LBRACE RBRACE'''
+    p[0] = ast.Hash()
+
+def p_hash_stmt_single_item(p):
+    '''hash_stmt : LBRACE hash_node RBRACE'''
+    p[0] = ast.Hash().set(p[2])
+
+def p_hash_stmt_milti_items(p):
+    '''hash_stmt : LBRACE hash_node_list hash_node RBRACE'''
+    p[0] = p[2].set(p[3])
+
+def p_hash_node(p):
+    '''hash_node : STRING COLON expr_stmt'''
+    p[0] = (ast.String(p[1]), p[3])
+
+def p_hash_node_list(p):
+    '''hash_node_list : hash_node COMMA
+                      | hash_node_list hash_node COMMA'''
+    if len(p) == 3:
+        p[0] = ast.Hash().set(p[1])
+    elif len(p) == 4:
+        p[0] = p[1].set(p[2])
+
 def p_property_stmt(p):
     '''property_stmt : expr_stmt LSQUARE expr_stmt RSQUARE
                      | expr_stmt PERIOD IDENTIFER'''
@@ -300,7 +325,7 @@ def p_callable_stmt_misc(p):
 
 def p_error(p):
     if p:
-        raise Exception("Syntax error at '%s' line %d" % (p.value, p.lineno))
+        raise Exception("Syntax error at '%s' line %d column %d" % (p.value, p.lineno, p.lexpos + 1))
 
 parser = yacc.yacc()
 

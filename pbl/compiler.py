@@ -69,6 +69,8 @@ class Opcode(Enum):
     CALL = 20
     # MKARR A: S(-A) = [S(-A) ... S(-1)]
     MKARR = 21
+    # MKHASH A: S(-2A) = {S(-2A): S(-2A + 1), S(-2A + 2): S(-2A + 3), ..., S(-2): S(-1)}
+    MKHASH = 110
     # SETP: S(-2)[S(-1)] = S(-3) -> S(-3)
     SETP = 23
     # GETP: S(-2) = S(-2)[S(-1)]
@@ -436,6 +438,29 @@ class MKARR(Instruction):
 
         vm.stack[vm.reg.SP - self.cnt] = arr
         vm.reg.SP -= self.cnt - 1
+
+class MKHASH(Instruction):
+
+    def __init__(self, cnt):
+        self.cnt = cnt
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.cnt)
+
+    def run(self, vm):
+        vm.reg.PC += 1
+
+        hsh = obj.Hash()
+
+        index = vm.reg.SP - 2 * self.cnt
+        for i in range(self.cnt):
+            setattr(hsh, vm.stack[index], vm.stack[index + 1])
+
+            index += 2
+
+        vm.stack[vm.reg.SP - 2 * self.cnt] = hsh
+
+        vm.reg.SP -= 2 * self.cnt - 1
 
 class SETP(Instruction):
 
