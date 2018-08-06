@@ -139,3 +139,17 @@ class TestFn(BaseTest):
         end()
         '''
         assert self.vm.frame.hash['a'] == 11
+
+    def test_recursive(self):
+        '''
+	sum = fn(from, to) do
+	    if from == to do
+		return to
+	    end
+
+	    return from + sum(from + 1, to)
+	end
+
+	a = sum(1, 100)
+        '''
+        assert self.vm.frame.hash['a'] == 5050
