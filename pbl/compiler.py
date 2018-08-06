@@ -31,8 +31,6 @@ class Opcode(Enum):
     DIV = 6
     # SET A: HASH(A) = S(-1)
     SET = 7
-    # PSET A: parent HASH(A) = S(-1)
-    PSET = 106
     # GET A: S(-1) = HASH(A)
     GET = 8
     # JMPT A: if S(-1) then R(PC) = A
@@ -183,23 +181,20 @@ class SET(Instruction):
         return '%-6s %s' % (type(self).__name__, self.name)
 
     def run(self, vm):
-        vm.frame.hash[self.name] = vm.stack[vm.reg.SP - 1]
-        vm.reg.PC += 1
+        name = self.name
 
-class PSET(Instruction):
+        if name[0] == '@': # parent scope
+            name = name[1:]
+            self._set(vm.frame.parent, name, vm.stack[vm.reg.SP - 1])
+        else:
+            vm.frame.hash[name] = vm.stack[vm.reg.SP - 1]
 
-    def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return '%-6s %s' % (type(self).__name__, self.name)
-
-    def run(self, vm):
-        self._set(vm.frame, self.name, vm.stack[vm.reg.SP - 1])
         vm.reg.PC += 1
 
     def _set(self, frame, key, value):
-        if key in frame.hash:
+        if not isinstance(frame, Frame):
+            raise Exception('Cannot access parent of top frame')
+        elif key in frame.hash:
             frame.hash[key] = value
         elif frame.parent:
             return self._set(frame.parent, key, value)
@@ -215,12 +210,21 @@ class GET(Instruction):
         return '%-6s %s' % (type(self).__name__, self.name)
 
     def run(self, vm):
-        vm.stack[vm.reg.SP] = self._get(vm.frame, self.name)
+        name = self.name
+
+        if name[0] == '@': # parent scope
+            name = name[1:]
+            vm.stack[vm.reg.SP] = self._get(vm.frame.parent, name)
+        else:
+            vm.stack[vm.reg.SP] = self._get(vm.frame, name)
+
         vm.reg.SP += 1
         vm.reg.PC += 1
 
     def _get(self, frame, key):
-        if key in frame.hash:
+        if not isinstance(frame, Frame):
+            raise Exception('Cannot access parent of top frame')
+        elif key in frame.hash:
             return frame.hash[key]
         elif frame.parent:
             return self._get(frame.parent, key)

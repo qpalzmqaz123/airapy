@@ -23,7 +23,7 @@ reserved = {
 }
 
 tokens = [
-    'IDENTIFER', 'PARENT_IDENTIFER', 'NUMBER', 'STRING', 'FLOAT',
+    'IDENTIFER', 'NUMBER', 'STRING', 'FLOAT',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS',
     'ADDEQ', 'SUBEQ', 'MULEQ', 'DIVEQ',
     'GT', 'LT', 'GE', 'LE', 'EQ', 'NE',
@@ -69,13 +69,8 @@ def t_STRING(t):
     t.value = t.value.replace("\\'", "'")
     return t
 
-def t_PARENT_IDENTIFER(t):
-    r'@[a-zA-Z_][a-zA-Z_0-9]*'
-    t.value = t.value[1:]
-    return t
-
 def t_IDENTIFER(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    r'@?[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'IDENTIFER')    # Check for reserved words
     return t
 
