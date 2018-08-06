@@ -26,7 +26,7 @@ class Array(Object):
         self.list.append(value)
 
     def __repr__(self):
-        return '%s(%s)' % (type(self).__name__, str(self.list))
+        return '%s' % str(self.list)
 
     def __getattr__(self, attr):
         if re.match(r'^\d+$', attr):
@@ -90,7 +90,7 @@ class Array(Object):
 class Hash(Object):
 
     def __repr__(self):
-        return '%s(%s)' % (type(self).__name__, str(self.__dict__))
+        return '%s' % str(self.__dict__)
 
     def __getattr__(self, attr):
         return super().__getattr__(attr)
