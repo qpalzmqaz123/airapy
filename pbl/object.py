@@ -97,3 +97,12 @@ class Hash(Object):
 
     def __setattr__(self, attr, value):
         super().__setattr__(attr, value)
+
+class Error(object):
+
+    def __init__(self, message, backtrace=[]):
+        self.message = message
+        self.backtrace = backtrace
+
+    def __repr__(self):
+        return '%s: %s' % (type(self).__name__, str(self.message))

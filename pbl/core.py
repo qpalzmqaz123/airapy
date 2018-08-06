@@ -41,6 +41,7 @@ class Pbl(object):
 
     def _bootstrap(self):
         self._setup_print()
+        self._setup_error()
 
     def _setup_print(self):
         def _print(vm):
@@ -63,6 +64,22 @@ class Pbl(object):
 
         key = self.api.create_string('print')
         fn = self.api.create_function(_print)
+
+        self.api.set_property(global_obj, key, fn)
+
+    def _setup_error(self):
+        def _error(vm):
+            nargs = vm.stack[vm.reg.SP - 2]
+            args = vm.stack[vm.reg.SP - 2 - nargs : vm.reg.SP - 2]
+
+            message = '' if nargs == 0 else args[0]
+
+            return obj.Error(message)
+
+        global_obj = self.api.get_global_object()
+
+        key = self.api.create_string('Error')
+        fn = self.api.create_function(_error)
 
         self.api.set_property(global_obj, key, fn)
 
