@@ -343,6 +343,10 @@ class RET(Instruction):
 
         vm.pop_frame()
 
+        # pop args and nargs
+        nargs = vm.stack[vm.reg.SP - 2]
+        vm.reg.SP -= nargs + 1
+
         vm.reg.PC += 1
         vm.stack[vm.reg.SP - 1] = ret_val
 
