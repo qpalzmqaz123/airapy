@@ -33,7 +33,7 @@ class VM(object):
 
     def __init__(self):
         self.reg = None
-        self.stack = [0] * 20
+        self.stack = Stack()
         self.frames = []
         self.frame = None
 
@@ -54,3 +54,16 @@ class VM(object):
         self.frames.pop()
         self.frame = self.frames[-1] if self.frames else None
         self.reg = self.frames[-1].reg if self.frames else None
+
+class Stack(list):
+
+    def __getitem__(self, key):
+        return super().__getitem__(key)
+
+    def __setitem__(self, key, value):
+        diff = key - len(self) + 1
+
+        if diff > 0:
+            self += [0] * diff
+
+        return super().__setitem__(key, value)
