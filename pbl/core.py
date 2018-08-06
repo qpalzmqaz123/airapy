@@ -47,7 +47,17 @@ class Pbl(object):
             nargs = vm.stack[vm.reg.SP - 2]
             args = vm.stack[vm.reg.SP - 2 - nargs : vm.reg.SP - 2]
 
-            print(*args)
+            def _map(x):
+                if x == None:
+                    return 'nil'
+                elif x == True:
+                    return 'true'
+                elif x == False:
+                    return 'false'
+                else:
+                    return x
+
+            print(*map(_map, args))
 
         global_obj = self.api.get_global_object()
 
