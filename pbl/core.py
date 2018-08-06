@@ -9,7 +9,7 @@ from . import compiler
 
 class Pbl(object):
 
-    def __init__(self, memblk=1000):
+    def __init__(self):
         self._vm = vm.VM()
         self.api = Api(self)
 
