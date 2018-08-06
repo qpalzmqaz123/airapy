@@ -80,7 +80,7 @@ def t_NEWLINE(t):
     return t
 
 def t_COMMENT(t):
-    r'\#[^\r\n(\r\n)]*'
+    r'\#.*'
     pass
 
 def t_SPACE(t):
