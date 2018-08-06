@@ -131,3 +131,11 @@ class TestFn(BaseTest):
         end(100)
         '''
         assert self.vm.frame.hash['a'] == 100
+
+    def test_fn_add(self):
+        '''
+        a = 1 + fn() do
+            return 10
+        end()
+        '''
+        assert self.vm.frame.hash['a'] == 11
