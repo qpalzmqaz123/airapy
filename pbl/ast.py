@@ -5,6 +5,10 @@ from . import compiler
 
 class Tree(object):
 
+    def __init__(self, line=0, col=0):
+        self.line = line
+        self.col = col
+
     def eval(self):
         pass
 
@@ -77,8 +81,8 @@ class Variable(Node):
     def __init__(self, name):
         self.name = name
 
-    def compile(self, lst):
-        lst.append(compiler.GET(self.name))
+    def compile(self, lst, is_get=True):
+        lst.append(compiler.GET(self.name) if is_get else compiler.SET(self.name))
 
 class Property(Node):
 
@@ -179,21 +183,14 @@ class BinOp(Node):
 
 class Assign(Node):
 
-    def __init__(self, variable, value, from_parent=False):
+    def __init__(self, variable, value):
         self.variable = variable
         self.value = value
-        self.from_parent = from_parent
 
     def compile(self, lst):
         self.value.compile(lst)
 
-        if isinstance(self.variable, Variable):
-            if self.from_parent:
-                lst.append(compiler.PSET(self.variable.name))
-            else:
-                lst.append(compiler.SET(self.variable.name))
-        else:
-            self.variable.compile(lst, False)
+        self.variable.compile(lst, False)
 
 class Compare(Node):
     GT = '>'
