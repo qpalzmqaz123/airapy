@@ -92,43 +92,23 @@ def p_expr_stmt_false(p):
     p[0] = ast.Boolean(False)
 
 def p_stmt_expr_assign(p):
-    '''assign_stmt : IDENTIFER EQUALS expr_stmt'''
-    p[0] = ast.Assign(ast.Variable(p[1]), p[3])
-
-def p_stmt_expr_assign_property(p):
-    '''assign_stmt : property_stmt EQUALS expr_stmt'''
+    '''assign_stmt : target_stmt EQUALS expr_stmt'''
     p[0] = ast.Assign(p[1], p[3])
 
 def p_stmt_expr_add_assign(p):
-    '''assign_stmt : IDENTIFER ADDEQ expr_stmt'''
-    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.ADD))
-
-def p_stmt_expr_add_assign_property(p):
-    '''assign_stmt : property_stmt ADDEQ expr_stmt'''
+    '''assign_stmt : target_stmt ADDEQ expr_stmt'''
     p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.ADD))
 
 def p_stmt_expr_sub_assign(p):
-    '''assign_stmt : IDENTIFER SUBEQ expr_stmt'''
-    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.SUB))
-
-def p_stmt_expr_sub_assign_property(p):
-    '''assign_stmt : property_stmt SUBEQ expr_stmt'''
+    '''assign_stmt : target_stmt SUBEQ expr_stmt'''
     p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.SUB))
 
 def p_stmt_expr_mul_assign(p):
-    '''assign_stmt : IDENTIFER MULEQ expr_stmt'''
-    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.MUL))
-
-def p_stmt_expr_mul_assign_property(p):
-    '''assign_stmt : property_stmt MULEQ expr_stmt'''
+    '''assign_stmt : target_stmt MULEQ expr_stmt'''
     p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.MUL))
 
 def p_stmt_expr_div_assign(p):
-    '''assign_stmt : IDENTIFER DIVEQ expr_stmt'''
-    p[0] = ast.Assign(ast.Variable(p[1]), ast.BinOp(ast.Variable(p[1]), p[3], ast.BinOp.DIV))
-
-def p_stmt_expr_div_assign_property(p):
-    '''assign_stmt : property_stmt DIVEQ expr_stmt'''
+    '''assign_stmt : target_stmt DIVEQ expr_stmt'''
     p[0] = ast.Assign(p[1], ast.BinOp(p[1], p[3], ast.BinOp.DIV))
 
 def p_stmt_expr_assign_parent(p):
@@ -338,6 +318,16 @@ def p_callable_stmt_misc(p):
                      | property_stmt
                      | fn_stmt'''
     p[0] = p[1]
+
+def p_target_stmt(p):
+    '''target_stmt : IDENTIFER
+                   | property_stmt'''
+    if isinstance(p[1], str):
+        p[0] = ast.Variable(p[1])
+    elif isinstance(p[1], ast.Property):
+        p[0] = p[1]
+    else:
+        raise Exception('Invalid target_stmt')
 
 def p_error(p):
     if p:
