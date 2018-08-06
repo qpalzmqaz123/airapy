@@ -390,14 +390,17 @@ class CALL(Instruction):
 
             vm.reg.PC = fn.index
         elif isinstance(fn, obj.BuiltinFunction):
-            vm.reg.PC += 1
-
             frame = Frame()
             vm.push_frame(frame)
 
             ret_val = fn.fn(vm)
-
             vm.pop_frame()
+
+            # restore
+            nargs = vm.stack[vm.reg.SP - 2]
+            vm.reg.SP -= nargs + 1
+
+            vm.reg.PC += 1
             vm.stack[vm.reg.SP - 1] = ret_val
         else:
             raise Exception('value is not callable')
