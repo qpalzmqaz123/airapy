@@ -85,3 +85,17 @@ class TestArr(BaseTest):
         b = a[1]
         '''
         assert self.vm.frame.hash['b'] == 5
+
+    def test_arr_op_fn(self):
+        '''
+        a = [1, 2, 3]
+
+        fn1 = fn() do
+            @a[0] = 100
+        end
+
+        fn1()
+
+        b = a[0]
+        '''
+        assert self.vm.frame.hash['b'] == 100
