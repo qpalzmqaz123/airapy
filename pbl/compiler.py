@@ -104,12 +104,11 @@ class Instruction(object):
         vm.reg.PC += 1
 
     def _error(self, vm, msg):
-        arr = [] # [msg, 1, fn]
-        arr.append(msg)
-        arr.append(1)
-        arr.append(vm.frames[0].hash['Error'])
+        # [msg, 1, fn]
+        vm.stack[vm.reg.SP] = msg
+        vm.stack[vm.reg.SP + 1] = 1
+        vm.stack[vm.reg.SP + 2] = vm.frames[0].hash['Error']
 
-        vm.stack += arr
         vm.reg.SP += 3
 
         CALL(self.line, self.text).run(vm)
