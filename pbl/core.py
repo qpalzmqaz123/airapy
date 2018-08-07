@@ -59,9 +59,9 @@ class Pbl(object):
             def _map(x):
                 if x == None:
                     return 'nil'
-                elif x == True:
+                elif x == True and isinstance(x, bool):
                     return 'true'
-                elif x == False:
+                elif x == False and isinstance(x, bool):
                     return 'false'
                 else:
                     return x
