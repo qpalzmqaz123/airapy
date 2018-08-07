@@ -113,7 +113,7 @@ class Instruction(object):
         vm.reg.SP += 3
 
         CALL(self.line, self.text).run(vm)
-        THROW().run(vm)
+        THROW(self.line, self.text).run(vm)
 
 class NOP(Instruction):
 
@@ -122,7 +122,9 @@ class NOP(Instruction):
 
 class PUSH(Instruction):
 
-    def __init__(self, source):
+    def __init__(self, source, line, text):
+        super().__init__(line=line, text=text)
+
         self.source = source
 
     def __str__(self):
@@ -135,15 +137,24 @@ class PUSH(Instruction):
 
 class POP(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.reg.SP -= 1
         vm.reg.PC += 1
+
+        if vm.reg.SP <= 0:
+            self.error('stack is empty')
+            return
 
         return vm.stack[vm.reg.SP]
 
 class POPN(Instruction):
 
-    def __init__(self, number):
+    def __init__(self, number, line, text):
+        super().__init__(line=line, text=text)
+
         if number <= 0:
             raise Exception('Invliad number')
 
@@ -156,16 +167,14 @@ class POPN(Instruction):
         vm.reg.SP -= self.number
         vm.reg.PC += 1
 
-class MOV(Instruction):
-
-    def __init__(self, source, target):
-        self.source = source
-        self.target = target
-
-    def __str__(self):
-        return '%-6s %s %s' % (type(self).__name__, self.source, self.target)
+        if vm.reg.SP <= 0:
+            self.error('stack is empty')
+            return
 
 class ADD(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] + vm.stack[vm.reg.SP - 1]
@@ -174,12 +183,18 @@ class ADD(Instruction):
 
 class SUB(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] - vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 
 class MUL(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] * vm.stack[vm.reg.SP - 1]
@@ -188,7 +203,13 @@ class MUL(Instruction):
 
 class DIV(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
+        if vm.stack[vm.reg.SP - 1] == 0:
+            self.error('division by zero')
+
         if type(vm.stack[vm.reg.SP - 2]) == float or type(vm.stack[vm.reg.SP - 1]) == float:
             vm.stack[vm.reg.SP - 2] = float(vm.stack[vm.reg.SP - 2] / vm.stack[vm.reg.SP - 1])
         else:
@@ -198,7 +219,7 @@ class DIV(Instruction):
 
 class SET(Instruction):
 
-    def __init__(self, name, line=0, text=''):
+    def __init__(self, name, line, text):
         super().__init__(line, text)
 
         self.name = name
@@ -220,16 +241,18 @@ class SET(Instruction):
     def _set(self, vm, frame, key, value):
         if not isinstance(frame, Frame):
             self._error(vm, 'Cannot access parent of top frame')
+            return
         elif key in frame.hash:
             frame.hash[key] = value
         elif frame.parent:
             return self._set(vm, frame.parent, key, value)
         else:
             self._error(vm, "'%s' is undefined" % key)
+            return
 
 class GET(Instruction):
 
-    def __init__(self, name, line=0, text=''):
+    def __init__(self, name, line, text):
         super().__init__(line, text)
 
         self.name = name
@@ -252,16 +275,20 @@ class GET(Instruction):
     def _get(self, vm, frame, key):
         if not isinstance(frame, Frame):
             self._error(vm, 'Cannot access parent of top frame')
+            return
         elif key in frame.hash:
             return frame.hash[key]
         elif frame.parent:
             return self._get(vm, frame.parent, key)
         else:
             self._error(vm, "'%s' is undefined" % key)
+            return
 
 class JMPT(Instruction):
 
-    def __init__(self, index):
+    def __init__(self, index, line, text):
+        super().__init__(line=line, text=text)
+
         self.index= index
 
     def __str__(self):
@@ -277,7 +304,9 @@ class JMPT(Instruction):
 
 class JMPF(Instruction):
 
-    def __init__(self, index):
+    def __init__(self, index, line, text):
+        super().__init__(line=line, text=text)
+
         self.index= index
 
     def __str__(self):
@@ -304,12 +333,18 @@ class JMP(Instruction):
 
 class EQ(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] == vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 
 class NE(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] != vm.stack[vm.reg.SP - 1]
@@ -318,12 +353,18 @@ class NE(Instruction):
 
 class GT(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] > vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 
 class GE(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] >= vm.stack[vm.reg.SP - 1]
@@ -332,12 +373,18 @@ class GE(Instruction):
 
 class LT(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] < vm.stack[vm.reg.SP - 1]
         vm.reg.SP -= 1
         vm.reg.PC += 1
 
 class LE(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = vm.stack[vm.reg.SP - 2] <= vm.stack[vm.reg.SP - 1]
@@ -346,12 +393,18 @@ class LE(Instruction):
 
 class AND(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = bool(vm.stack[vm.reg.SP - 2] and vm.stack[vm.reg.SP - 1])
         vm.reg.SP -= 1
         vm.reg.PC += 1
 
 class OR(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         vm.stack[vm.reg.SP - 2] = bool(vm.stack[vm.reg.SP - 2] or vm.stack[vm.reg.SP - 1])
@@ -360,13 +413,23 @@ class OR(Instruction):
 
 class NOT(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.stack[vm.reg.SP - 1] = bool(not vm.stack[vm.reg.SP - 1])
         vm.reg.PC += 1
 
 class RET(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
+        if (len(vm.frames) == 1): # top frame
+            self._error(vm, 'return from global scope')
+            return
+
         ret_val = vm.stack[vm.reg.SP - 1]
 
         vm.pop_frame()
@@ -380,7 +443,9 @@ class RET(Instruction):
 
 class DUP(Instruction):
 
-    def __init__(self, index):
+    def __init__(self, index, line, text):
+        super().__init__(line=line, text=text)
+
         if index > -1:
             raise Exception('Invliad index')
 
@@ -396,7 +461,12 @@ class DUP(Instruction):
 
 class MKFN(Instruction):
 
-    def __init__(self, index):
+    def __init__(self, index, line, text):
+        super().__init__(line=line, text=text)
+
+        if index < 0:
+            raise Exception('Invalid index')
+
         self.index = index
 
     def __str__(self):
@@ -408,6 +478,9 @@ class MKFN(Instruction):
         vm.reg.PC += 1
 
 class CALL(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         fn = vm.stack[vm.reg.SP - 1]
@@ -431,11 +504,14 @@ class CALL(Instruction):
             vm.reg.PC += 1
             vm.stack[vm.reg.SP - 1] = ret_val
         else:
-            raise Exception('value is not callable')
+            self._error(vm, 'value is not callable')
+            return
 
 class PUSHL(Instruction):
 
-    def __init__(self, index):
+    def __init__(self, index, line, text):
+        super().__init__(line=line, text=text)
+
         self.index = index
 
     def __str__(self):
@@ -448,12 +524,23 @@ class PUSHL(Instruction):
 
 class POPL(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
+
+        if len(vm.frame.loop) == 0:
+            self._error(vm, 'break outside loop')
+            return
+
         (pc, index) = vm.frame.loop.pop()
 
         vm.reg.PC = index + 1
 
 class CONT(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
 
     def run(self, vm):
         (pc, index) = vm.frame.loop[-1]
@@ -462,13 +549,22 @@ class CONT(Instruction):
 
 class MKARR(Instruction):
 
-    def __init__(self, cnt):
+    def __init__(self, cnt, line, text):
+        super().__init__(line=line, text=text)
+
+        if cnt < 0:
+            raise Exception('Invliad cnt')
+
         self.cnt = cnt
 
     def __str__(self):
         return '%-6s %s' % (type(self).__name__, self.cnt)
 
     def run(self, vm):
+        if vm.reg.SP < self.cnt:
+            self._error(vm, 'array length is exceed SP')
+            return
+
         vm.reg.PC += 1
 
         arr = obj.Array()
@@ -480,13 +576,22 @@ class MKARR(Instruction):
 
 class MKHASH(Instruction):
 
-    def __init__(self, cnt):
+    def __init__(self, cnt, line, text):
+        super().__init__(line=line, text=text)
+
+        if cnt < 0:
+            raise Exception('Invliad cnt')
+
         self.cnt = cnt
 
     def __str__(self):
         return '%-6s %s' % (type(self).__name__, self.cnt)
 
     def run(self, vm):
+        if vm.reg.SP < 2 * self.cnt:
+            self._error(vm, 'array length is exceed SP')
+            return
+
         vm.reg.PC += 1
 
         hsh = obj.Hash()
@@ -503,6 +608,9 @@ class MKHASH(Instruction):
 
 class SETP(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.reg.PC += 1
 
@@ -516,18 +624,32 @@ class SETP(Instruction):
 
 class GETP(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         vm.reg.PC += 1
 
-        vm.stack[vm.reg.SP - 2] = getattr(vm.stack[vm.reg.SP - 2],
-                                          str(vm.stack[vm.reg.SP - 1]))
+        try:
+            vm.stack[vm.reg.SP - 2] = getattr(vm.stack[vm.reg.SP - 2],
+                                              str(vm.stack[vm.reg.SP - 1]))
+        except:
+            self._error(vm, 'object has no attribute %s' % str(vm.stack[vm.reg.SP - 1]))
+            return
 
         vm.reg.SP -= 1
 
 class THROW(Instruction):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def run(self, vm):
         err = vm.stack[vm.reg.SP - 1]
+
+        if not isinstance(err, obj.Error):
+            self._error('value of throw should be an error')
+            return
 
         while len(vm.frames) != 1:
             vm.pop_frame()

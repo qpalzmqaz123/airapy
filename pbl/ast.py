@@ -49,32 +49,41 @@ class Block(Tree):
 
 class Int(Node):
 
-    def __init__(self, n):
+    def __init__(self, n, line, text):
+        super().__init__(line=line, text=text)
+
         self.value = n
 
     def compile(self, lst):
-        lst.append(compiler.PUSH(int(self.value)))
+        lst.append(compiler.PUSH(int(self.value), line=self.line, text=self.text))
 
 class Float(Node):
 
-    def __init__(self, f):
+    def __init__(self, f, line, text):
+        super().__init__(line=line, text=text)
+
         self.value = f
 
     def compile(self, lst):
-        lst.append(compiler.PUSH(float(self.value)))
+        lst.append(compiler.PUSH(float(self.value), line=self.line, text=self.text))
 
 class String(Node):
 
-    def __init__(self, s):
+    def __init__(self, s, line, text):
+        super().__init__(line=line, text=text)
+
         self.value = s
 
     def compile(self, lst):
-        lst.append(compiler.PUSH(self.value))
+        lst.append(compiler.PUSH(self.value, line=self.line, text=self.text))
 
 class Nil(Node):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def compile(self, lst):
-        lst.append(compiler.PUSH(None))
+        lst.append(compiler.PUSH(None, line=self.line, text=self.text))
 
 class Variable(Node):
 
@@ -97,19 +106,23 @@ class Property(Node):
     def compile(self, lst, is_get=True):
             self.target.compile(lst)
             self.key.compile(lst)
-            lst.append(compiler.GETP() if is_get else compiler.SETP())
+            lst.append(compiler.GETP(line=self.line, text=self.text) if is_get else compiler.SETP(line=self.line, text=self.text))
 
 class Boolean(Node):
 
-    def __init__(self, value):
+    def __init__(self, value, line, text):
+        super().__init__(line=line, text=text)
+
         self.value = bool(value)
 
     def compile(self, lst):
-        lst.append(compiler.PUSH(self.value))
+        lst.append(compiler.PUSH(self.value, line=self.line, text=self.text))
 
 class Array(Node):
 
-    def __init__(self):
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
         self.list = []
 
     def append(self, node):
@@ -132,11 +145,13 @@ class Array(Node):
         for node in self:
             node.compile(lst)
 
-        lst.append(compiler.MKARR(len(self.list)))
+        lst.append(compiler.MKARR(len(self.list), line=self.line, text=self.text))
 
 class Hash(Node):
 
-    def __init__(self):
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
         self.hash = {}
 
     def __repr__(self):
@@ -157,7 +172,7 @@ class Hash(Node):
             key.compile(lst)
             value.compile(lst)
 
-        lst.append(compiler.MKHASH(len(items)))
+        lst.append(compiler.MKHASH(len(items), line=self.line, text=self.text))
 
 class BinOp(Node):
     ADD = '+'
@@ -165,7 +180,9 @@ class BinOp(Node):
     MUL = '*'
     DIV = '/'
 
-    def __init__(self, left, right, type):
+    def __init__(self, left, right, type, line, text):
+        super().__init__(line=line, text=text)
+
         self.left = left
         self.right = right
         self.type = type
@@ -175,13 +192,13 @@ class BinOp(Node):
         self.right.compile(lst)
 
         if self.type == self.ADD:
-            lst.append(compiler.ADD())
+            lst.append(compiler.ADD(line=self.line, text=self.text))
         elif self.type == self.SUB:
-            lst.append(compiler.SUB())
+            lst.append(compiler.SUB(line=self.line, text=self.text))
         elif self.type == self.MUL:
-            lst.append(compiler.MUL())
+            lst.append(compiler.MUL(line=self.line, text=self.text))
         elif self.type == self.DIV:
-            lst.append(compiler.DIV())
+            lst.append(compiler.DIV(line=self.line, text=self.text))
         else:
             raise Exception('Invliad operation: %s' % self.type)
 
@@ -204,7 +221,9 @@ class Compare(Node):
     EQ = '=='
     NE = '!='
 
-    def __init__(self, left, right, type):
+    def __init__(self, left, right, type, line, text):
+        super().__init__(line=line, text=text)
+
         self.left = left
         self.right = right
         self.type = type
@@ -214,17 +233,17 @@ class Compare(Node):
         self.right.compile(lst)
 
         if self.type == self.GT:
-            lst.append(compiler.GT())
+            lst.append(compiler.GT(line=self.line, text=self.text))
         elif self.type == self.GE:
-            lst.append(compiler.GE())
+            lst.append(compiler.GE(line=self.line, text=self.text))
         elif self.type == self.LT:
-            lst.append(compiler.LT())
+            lst.append(compiler.LT(line=self.line, text=self.text))
         elif self.type == self.LE:
-            lst.append(compiler.LE())
+            lst.append(compiler.LE(line=self.line, text=self.text))
         elif self.type == self.EQ:
-            lst.append(compiler.EQ())
+            lst.append(compiler.EQ(line=self.line, text=self.text))
         elif self.type == self.NE:
-            lst.append(compiler.NE())
+            lst.append(compiler.NE(line=self.line, text=self.text))
         else:
             raise Exception('Invliad operation: %s' % self.type)
 
@@ -233,7 +252,9 @@ class Test(Node):
     OR = 'or'
     NOT = 'not'
 
-    def __init__(self, left, right, type):
+    def __init__(self, left, right, type, line, text):
+        super().__init__(line=line, text=text)
+
         self.left = left
         self.right = right
         self.type = type
@@ -243,17 +264,19 @@ class Test(Node):
         self.right.compile(lst)
 
         if self.type == self.AND:
-            lst.append(compiler.AND())
+            lst.append(compiler.AND(line=self.line, text=self.text))
         elif self.type == self.OR:
-            lst.append(compiler.OR())
+            lst.append(compiler.OR(line=self.line, text=self.text))
         elif self.type == self.NOT:
-            lst.append(compiler.NOT())
+            lst.append(compiler.NOT(line=self.line, text=self.text))
         else:
             raise Exception('Invliad type: %s' % self.type)
 
 class While(Node):
 
-    def __init__(self, condition, body):
+    def __init__(self, condition, body, line, text):
+        super().__init__(line=line, text=text)
+
         self.condition = condition
         self.body = body
 
@@ -270,26 +293,28 @@ class While(Node):
         # c POPL
         #   ...
         index_a = lst.lastIndex + 2
-        lst.append(compiler.PUSHL(-1))
+        lst.append(compiler.PUSHL(-1, line=self.line, text=self.text))
 
         self.condition.compile(lst)
 
         index_b = lst.lastIndex + 1
-        lst.append(compiler.JMPF(-1))
+        lst.append(compiler.JMPF(-1, line=self.line, text=self.text))
 
         self.body.compile(lst)
 
-        lst.append(compiler.CONT())
+        lst.append(compiler.CONT(line=self.line, text=self.text))
 
         index_c = lst.lastIndex + 1
-        lst.append(compiler.POPL())
+        lst.append(compiler.POPL(line=self.line, text=self.text))
 
         lst[index_a - 1].index = index_c
         lst[index_b].index = index_c
 
 class If(Node):
 
-    def __init__(self, condition, body, otherwise):
+    def __init__(self, condition, body, otherwise, line, text):
+        super().__init__(line=line, text=text)
+
         self.condition = condition
         self.body = body
         self.otherwise = otherwise
@@ -304,7 +329,7 @@ class If(Node):
         self.condition.compile(lst)
 
         index_a = lst.lastIndex + 1
-        lst.append(compiler.JMPT(-1))
+        lst.append(compiler.JMPT(-1, line=self.line, text=self.text))
 
         self.otherwise.compile(lst)
 
@@ -321,7 +346,7 @@ class If(Node):
 
 class Function(Node):
 
-    def __init__(self, args, body, line=0, text=''):
+    def __init__(self, args, body, line, text):
         super().__init__(line, text)
 
         self.args = args
@@ -339,18 +364,18 @@ class Function(Node):
 
         if (len(self.args)):
             for k in self.args:
-                lst.append(compiler.DUP(index))
-                lst.append(compiler.SET(k))
-                lst.append(compiler.POP())
+                lst.append(compiler.DUP(index, line=self.line, text=self.text))
+                lst.append(compiler.SET(k, line=self.line, text=self.text))
+                lst.append(compiler.POP(line=self.line, text=self.text))
 
                 index += 1
 
         self.body.compile(lst)
-        lst.append(compiler.PUSH(None))
-        lst.append(compiler.RET())
+        lst.append(compiler.PUSH(None, line=self.line, text=self.text))
+        lst.append(compiler.RET(line=self.line, text=self.text))
         index_b = lst.lastIndex + 1
 
-        lst.append(compiler.MKFN(index_a + 1))
+        lst.append(compiler.MKFN(index_a + 1, line=self.line, text=self.text))
 
         lst[index_a].index = index_b
 
@@ -381,16 +406,18 @@ class Arguments(Node):
 
 class Return(Node):
 
-    def __init__(self, expr):
+    def __init__(self, expr, line, text):
+        super().__init__(line=line, text=text)
+
         self.expr = expr
 
     def compile(self, lst):
         if not self.expr:
-            lst.append(compiler.PUSH(None))
+            lst.append(compiler.PUSH(None, line=self.line, text=self.text))
         else:
             self.expr.compile(lst)
 
-        lst.append(compiler.RET())
+        lst.append(compiler.RET(line=self.line, text=self.text))
 
 class Call(Node):
 
@@ -407,17 +434,23 @@ class Call(Node):
         # ... (function body)
         # ...
         self.args.compile(lst)
-        lst.append(compiler.PUSH(len(self.args)))
+        lst.append(compiler.PUSH(len(self.args), line=self.line, text=self.text))
         self.fn.compile(lst)
 
         lst.append(compiler.CALL(line=self.line, text=self.fn.text))
 
 class Break(Node):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def compile(self, lst):
-        lst.append(compiler.POPL())
+        lst.append(compiler.POPL(line=self.line, text=self.text))
 
 class Continue(Node):
 
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
     def compile(self, lst):
-        lst.append(compiler.CONT())
+        lst.append(compiler.CONT(line=self.line, text=self.text))
