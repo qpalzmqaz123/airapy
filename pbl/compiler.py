@@ -77,8 +77,8 @@ class Opcode(Enum):
     TRY = 25
     # catch:
     CATCH = 26
-    # FINALLY:
-    FINALLY = 27
+    # FINAL:
+    FINAL = 27
     # THROW: throw S(-1)
     THROW = 28
 
@@ -650,7 +650,50 @@ class THROW(Instruction):
             self._error(vm, 'value of throw should be an error')
             return
 
-        while len(vm.frames) != 1:
+        while True:
+            # has exception handle
+            if vm.frame.exception and vm.frame.exception[-1] != -1:
+                index = vm.frame.exception[-1]
+                vm.reg.PC = index
+
+                # disable handle
+                vm.frame.exception[-1] = -1
+            else:
+                vm.frame.error = err
+
+            if len(vm.frames) <= 1:
+                break
+
             vm.pop_frame()
 
-        vm.frame.error = err
+            # restore
+            nargs = vm.stack[vm.reg.SP - 2]
+            vm.reg.SP -= nargs + 1
+
+            vm.reg.PC += 1
+            vm.stack[vm.reg.SP - 1] = err
+
+class TRY(Instruction):
+
+    def __init__(self, index, line, text):
+        super().__init__(line=line, text=text)
+
+        self.index = index
+
+    def __str__(self):
+        return '%-6s %s' % (type(self).__name__, self.index)
+
+    def run(self, vm):
+        vm.reg.PC += 1
+
+        vm.frame.exception.append(self.index)
+
+class FINAL(Instruction):
+
+    def __init__(self, line, text):
+        super().__init__(line=line, text=text)
+
+    def run(self, vm):
+        vm.reg.PC += 1
+
+        vm.frame.exception.pop()

@@ -20,6 +20,7 @@ class Frame(object):
     def __init__(self, parent=None, line=0, text=''):
         self.hash = {}
         self.loop = []
+        self.exception = []
         self.reg = Register()
         self.parent = parent
         self.line = line

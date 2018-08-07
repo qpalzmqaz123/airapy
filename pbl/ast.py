@@ -465,3 +465,44 @@ class Throw(Node):
     def compile(self, lst):
         self.expr.compile(lst)
         lst.append(compiler.THROW(line=self.line, text=self.text))
+
+class PblException(Node):
+
+    def __init__(self, try_body, except_body, final_body, var, line, text):
+        super().__init__(line=line, text=text)
+
+        self.var = var
+        self.try_body = try_body
+        self.except_body = except_body
+        self.final_body = final_body
+
+    def compile(self, lst):
+        #   ...
+        # a TRY c
+        #   ... (try_body)
+        # b JMP d
+        # c SET self.var
+        #   ... (except_body)
+        # d FINAL
+        #   ... (final_body)
+        index_a = lst.lastIndex + 1
+
+        lst.append(compiler.TRY(-1, line=self.line, text=self.text))
+        self.try_body.compile(lst)
+
+        index_b = lst.lastIndex + 1
+
+        lst.append(compiler.JMP(-1))
+
+        index_c = lst.lastIndex + 1
+
+        self.var.compile(lst, False)
+        self.except_body.compile(lst)
+
+        index_d = lst.lastIndex + 1
+
+        lst.append(compiler.FINAL(line=self.line, text=self.text))
+        self.final_body.compile(lst)
+
+        lst[index_a].index = index_c
+        lst[index_b].index = index_d
