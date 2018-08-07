@@ -49,7 +49,9 @@ def p_stmt_expr(p):
             | if_stmt NEWLINE
             | return_stmt NEWLINE
             | break_stmt NEWLINE
-            | continue_stmt NEWLINE'''
+            | continue_stmt NEWLINE
+            | exception_stmt NEWLINE
+            | throw_stmt NEWLINE'''
     p[0] = p[1]
 
 def p_stmt_exprs(p):
@@ -337,6 +339,15 @@ def p_break_stmt(p):
 def p_continue_stmt(p):
     '''continue_stmt : CONTINUE'''
     p[0] = ast.Continue(line=p.lineno(1), text=p[1])
+    p.set_lineno(0, p.lineno(1))
+
+def p_exception_stmt(p):
+    '''exception_stmt : TRY DO stmt_list CATCH DO stmt_list END'''
+    pass
+
+def p_throw_stmt(p):
+    '''throw_stmt : THROW expr_stmt'''
+    p[0] = ast.Throw(p[2], line=p.lineno(1), text=p[1])
     p.set_lineno(0, p.lineno(1))
 
 def p_callable_stmt_identifer(p):

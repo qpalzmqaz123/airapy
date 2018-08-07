@@ -454,3 +454,14 @@ class Continue(Node):
 
     def compile(self, lst):
         lst.append(compiler.CONT(line=self.line, text=self.text))
+
+class Throw(Node):
+
+    def __init__(self, expr, line, text):
+        super().__init__(line=line, text=text)
+
+        self.expr = expr
+
+    def compile(self, lst):
+        self.expr.compile(lst)
+        lst.append(compiler.THROW(line=self.line, text=self.text))

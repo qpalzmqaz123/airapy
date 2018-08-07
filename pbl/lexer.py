@@ -20,6 +20,10 @@ reserved = {
    'not': 'NOT',
    'true': 'TRUE',
    'false': 'FALSE',
+   'try': 'TRY',
+   'catch': 'CATCH',
+   'finally': 'FINALLY',
+   'throw': 'THROW',
 }
 
 tokens = [
