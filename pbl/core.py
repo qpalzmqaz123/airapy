@@ -30,7 +30,7 @@ class Pbl(object):
         while True:
             if len(self._vm.frames) == 1 and self._vm.frame.error:
                 self.error_handler(self._vm.frame.error)
-                return
+                return self._vm
 
             if (self._vm.reg.PC >= len(bytecode)):
                 break
