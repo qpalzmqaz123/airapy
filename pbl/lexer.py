@@ -88,7 +88,7 @@ def t_COMMENT(t):
     pass
 
 def t_SPACE(t):
-    r'\s+'
+    r'[ \f\t\v]+'
     pass
 
 def t_error(t):
