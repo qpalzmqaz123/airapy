@@ -647,7 +647,7 @@ class THROW(Instruction):
         err = vm.stack[vm.reg.SP - 1]
 
         if not isinstance(err, obj.Error):
-            self._error('value of throw should be an error')
+            self._error(vm, 'value of throw should be an error')
             return
 
         while len(vm.frames) != 1:
