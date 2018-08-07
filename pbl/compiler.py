@@ -658,6 +658,7 @@ class THROW(Instruction):
 
                 # disable handle
                 vm.frame.exception[-1] = -1
+                break
             else:
                 vm.frame.error = err
 
