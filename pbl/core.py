@@ -28,6 +28,10 @@ class Pbl(object):
 
     def run(self, bytecode, debug=False):
         while True:
+            if len(self._vm.frames) == 1 and self._vm.frame.error:
+                self.error_handler(self._vm.frame.error)
+                return
+
             if (self._vm.reg.PC >= len(bytecode)):
                 break
 
@@ -39,11 +43,15 @@ class Pbl(object):
 
         return self._vm
 
+    def error_handler(self, err):
+        print(err)
+
     def _bootstrap(self):
         self._setup_print()
         self._setup_error()
 
     def _setup_print(self):
+        # print(...)
         def _print(vm):
             nargs = vm.stack[vm.reg.SP - 2]
             args = vm.stack[vm.reg.SP - 2 - nargs : vm.reg.SP - 2]
@@ -68,13 +76,22 @@ class Pbl(object):
         self.api.set_property(global_obj, key, fn)
 
     def _setup_error(self):
+        # Error(msg)
         def _error(vm):
             nargs = vm.stack[vm.reg.SP - 2]
             args = vm.stack[vm.reg.SP - 2 - nargs : vm.reg.SP - 2]
 
             message = '' if nargs == 0 else args[0]
 
-            return obj.Error(message)
+            backtrace = []
+
+            for frame in vm.frames[1:]:
+                backtrace.append({
+                    'line': frame.line,
+                    'text': frame.text
+                })
+
+            return obj.Error(message, backtrace)
 
         global_obj = self.api.get_global_object()
 

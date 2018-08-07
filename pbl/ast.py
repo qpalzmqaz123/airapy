@@ -5,9 +5,9 @@ from . import compiler
 
 class Tree(object):
 
-    def __init__(self, line=0, col=0):
+    def __init__(self, line=0, text=''):
         self.line = line
-        self.col = col
+        self.text = text
 
     def eval(self):
         pass
@@ -78,15 +78,19 @@ class Nil(Node):
 
 class Variable(Node):
 
-    def __init__(self, name):
+    def __init__(self, name, line=0, text=''):
+        super().__init__(line, text)
+
         self.name = name
 
     def compile(self, lst, is_get=True):
-        lst.append(compiler.GET(self.name) if is_get else compiler.SET(self.name))
+        lst.append(compiler.GET(self.name, line=self.line, text=self.text) if is_get else compiler.SET(self.name, line=self.line, text=self.text))
 
 class Property(Node):
 
-    def __init__(self, target, key):
+    def __init__(self, target, key, line=0, text=''):
+        super().__init__(line, text)
+
         self.target = target
         self.key = key
 
@@ -317,7 +321,9 @@ class If(Node):
 
 class Function(Node):
 
-    def __init__(self, args, body):
+    def __init__(self, args, body, line=0, text=''):
+        super().__init__(line, text)
+
         self.args = args
         self.body = body
 
@@ -388,7 +394,9 @@ class Return(Node):
 
 class Call(Node):
 
-    def __init__(self, fn, args):
+    def __init__(self, fn, args, line=0):
+        super().__init__(line)
+
         self.fn = fn
         self.args = args
 
@@ -402,7 +410,7 @@ class Call(Node):
         lst.append(compiler.PUSH(len(self.args)))
         self.fn.compile(lst)
 
-        lst.append(compiler.CALL())
+        lst.append(compiler.CALL(line=self.line, text=self.fn.text))
 
 class Break(Node):
 

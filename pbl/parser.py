@@ -65,7 +65,7 @@ def p_stmt_exprs(p):
 
 def p_expr_stmt_identifer(p):
     '''expr_stmt : IDENTIFER'''
-    p[0] = ast.Variable(p[1])
+    p[0] = ast.Variable(p[1], line=p.lineno(1), text=p[1])
 
 def p_expr_stmt_number(p):
     '''expr_stmt : NUMBER'''
@@ -189,15 +189,15 @@ def p_fn_stmt_identifer_list(p):
 
 def p_call_stmt_multi_args(p):
     '''call_stmt : callable_stmt LPAREN expr_stmt_list expr_stmt RPAREN'''
-    p[0] = ast.Call(p[1], p[3].append(p[4]))
+    p[0] = ast.Call(p[1], p[3].append(p[4]), line=p.lineno(1))
 
 def p_call_stmt_single_args(p):
     '''call_stmt : callable_stmt LPAREN expr_stmt RPAREN'''
-    p[0] = ast.Call(p[1], ast.Arguments().append(p[3]))
+    p[0] = ast.Call(p[1], ast.Arguments().append(p[3]), line=p.lineno(1))
 
 def p_call_stmt_empty_args(p):
     '''call_stmt : callable_stmt LPAREN RPAREN'''
-    p[0] = ast.Call(p[1], ast.Arguments())
+    p[0] = ast.Call(p[1], ast.Arguments(), line=p.lineno(1))
 
 def p_array_stmt_empty_item(p):
     '''array_stmt : LSQUARE RSQUARE'''
@@ -291,7 +291,8 @@ def p_continue_stmt(p):
 
 def p_callable_stmt_identifer(p):
     '''callable_stmt : IDENTIFER'''
-    p[0] = ast.Variable(p[1])
+    p[0] = ast.Variable(p[1], line=p.lineno(1), text=p[1])
+    p.set_lineno(0, p.lineno(1))
 
 def p_callable_stmt_misc(p):
     '''callable_stmt : call_stmt
@@ -303,7 +304,7 @@ def p_target_stmt(p):
     '''target_stmt : IDENTIFER
                    | property_stmt'''
     if isinstance(p[1], str):
-        p[0] = ast.Variable(p[1])
+        p[0] = ast.Variable(p[1], line=p.lineno(1), text=p[1])
     elif isinstance(p[1], ast.Property):
         p[0] = p[1]
     else:

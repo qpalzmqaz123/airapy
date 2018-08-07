@@ -73,6 +73,14 @@ class Opcode(Enum):
     SETP = 23
     # GETP: S(-2) = S(-2)[S(-1)]
     GETP = 24
+    # try:
+    TRY = 25
+    # catch:
+    CATCH = 26
+    # FINALLY:
+    FINALLY = 27
+    # THROW: throw S(-1)
+    THROW = 28
 
 class InstructionList(list):
 
@@ -82,6 +90,10 @@ class InstructionList(list):
 
 class Instruction(object):
 
+    def __init__(self, line=0, text=''):
+        self.line = line
+        self.text = text
+
     def __repr__(self):
         return '%-6s' % (type(self).__name__)
 
@@ -90,6 +102,18 @@ class Instruction(object):
 
     def run(self, vm):
         vm.reg.PC += 1
+
+    def _error(self, vm, msg):
+        arr = [] # [msg, 1, fn]
+        arr.append(msg)
+        arr.append(1)
+        arr.append(vm.frames[0].hash['Error'])
+
+        vm.stack += arr
+        vm.reg.SP += 3
+
+        CALL(self.line, self.text).run(vm)
+        THROW().run(vm)
 
 class NOP(Instruction):
 
@@ -174,7 +198,9 @@ class DIV(Instruction):
 
 class SET(Instruction):
 
-    def __init__(self, name):
+    def __init__(self, name, line=0, text=''):
+        super().__init__(line, text)
+
         self.name = name
 
     def __str__(self):
@@ -185,25 +211,27 @@ class SET(Instruction):
 
         if name[0] == '@': # parent scope
             name = name[1:]
-            self._set(vm.frame.parent, name, vm.stack[vm.reg.SP - 1])
+            self._set(vm, vm.frame.parent, name, vm.stack[vm.reg.SP - 1])
         else:
             vm.frame.hash[name] = vm.stack[vm.reg.SP - 1]
 
         vm.reg.PC += 1
 
-    def _set(self, frame, key, value):
+    def _set(self, vm, frame, key, value):
         if not isinstance(frame, Frame):
-            raise Exception('Cannot access parent of top frame')
+            self._error(vm, 'Cannot access parent of top frame')
         elif key in frame.hash:
             frame.hash[key] = value
         elif frame.parent:
-            return self._set(frame.parent, key, value)
+            return self._set(vm, frame.parent, key, value)
         else:
-            raise Exception("'%s' is not defined" % key)
+            self._error(vm, "'%s' is undefined" % key)
 
 class GET(Instruction):
 
-    def __init__(self, name):
+    def __init__(self, name, line=0, text=''):
+        super().__init__(line, text)
+
         self.name = name
 
     def __str__(self):
@@ -214,22 +242,22 @@ class GET(Instruction):
 
         if name[0] == '@': # parent scope
             name = name[1:]
-            vm.stack[vm.reg.SP] = self._get(vm.frame.parent, name)
+            vm.stack[vm.reg.SP] = self._get(vm, vm.frame.parent, name)
         else:
-            vm.stack[vm.reg.SP] = self._get(vm.frame, name)
+            vm.stack[vm.reg.SP] = self._get(vm, vm.frame, name)
 
         vm.reg.SP += 1
         vm.reg.PC += 1
 
-    def _get(self, frame, key):
+    def _get(self, vm, frame, key):
         if not isinstance(frame, Frame):
-            raise Exception('Cannot access parent of top frame')
+            self._error(vm, 'Cannot access parent of top frame')
         elif key in frame.hash:
             return frame.hash[key]
         elif frame.parent:
-            return self._get(frame.parent, key)
+            return self._get(vm, frame.parent, key)
         else:
-            raise Exception("'%s' is not defined" % key)
+            self._error(vm, "'%s' is undefined" % key)
 
 class JMPT(Instruction):
 
@@ -385,12 +413,12 @@ class CALL(Instruction):
         fn = vm.stack[vm.reg.SP - 1]
 
         if isinstance(fn, obj.Function):
-            frame = Frame(fn.parent_frame)
+            frame = Frame(fn.parent_frame, line=self.line, text=self.text)
             vm.push_frame(frame)
 
             vm.reg.PC = fn.index
         elif isinstance(fn, obj.BuiltinFunction):
-            frame = Frame()
+            frame = Frame(line=self.line, text=self.text)
             vm.push_frame(frame)
 
             ret_val = fn.fn(vm)
@@ -495,3 +523,13 @@ class GETP(Instruction):
                                           str(vm.stack[vm.reg.SP - 1]))
 
         vm.reg.SP -= 1
+
+class THROW(Instruction):
+
+    def run(self, vm):
+        err = vm.stack[vm.reg.SP - 1]
+
+        while len(vm.frames) != 1:
+            vm.pop_frame()
+
+        vm.frame.error = err

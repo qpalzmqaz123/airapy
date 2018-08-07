@@ -105,4 +105,9 @@ class Error(object):
         self.backtrace = backtrace
 
     def __repr__(self):
-        return '%s: %s' % (type(self).__name__, str(self.message))
+        strs = []
+        strs.append('%s: %s' % (type(self).__name__, str(self.message)))
+        for t in self.backtrace:
+            strs.insert(1, '    %s at line %d' % (t['text'], t['line']))
+
+        return '\n'.join(strs)
