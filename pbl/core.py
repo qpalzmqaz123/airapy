@@ -116,3 +116,6 @@ class Api(object):
 
     def create_string(self, string):
         return string
+
+    def create_int(self, num):
+        return num
