@@ -1,5 +1,8 @@
+build/
+dist/
 __pycache__/
 .pytest_cache/
 *.pyc
 *.out
-pbl/parsetab.py
+aira/parsetab.py
+*.egg-info

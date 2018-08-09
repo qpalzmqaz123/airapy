@@ -378,7 +378,7 @@ def p_error(p):
     if p:
         raise Exception("Syntax error at '%s' line %d column %d" % (p.value, p.lineno, p.lexpos + 1))
 
-parser = yacc.yacc()
+parser = yacc.yacc(debug=0, outputdir="/tmp")
 
 def parse(script):
     if not (script.endswith('\r') or script.endswith('\n')):

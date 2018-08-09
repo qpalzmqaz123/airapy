@@ -22,7 +22,7 @@ reserved = {
    'false': 'FALSE',
    'try': 'TRY',
    'catch': 'CATCH',
-   'finally': 'FINALLY',
+#   'finally': 'FINALLY',
    'throw': 'THROW',
 }
 

@@ -5,15 +5,14 @@ from setuptools import setup
 
 setup(
     name='aira',
-    version='0.0.12',
-    description='ruff auto flash',
+    version='0.0.1',
+    description='aira script language',
     author='wangqj',
-    author_email='wangqinjun@nanchao.org',
-    url='http://git.nanchao.org:3000/wangqj/auto_flash.git',
-    py_modules=['ruff_auto_flash'],
-    scripts=['ruff_auto_flash.py'],
+    author_email='qpalzmqaz123@gmail.com',
+    url='',
+    packages=['aira'],
+    scripts=['bin/aira'],
     install_requires=[
-        'pyserial',
-        'click',
-        'termcolor'
+        'ply',
+        'click'
     ])
