@@ -98,7 +98,7 @@ b.b = 2
 print(b)
 ```
 
-### closure
+### Closure
 
 ```ruby
 get_counter = fn() do
