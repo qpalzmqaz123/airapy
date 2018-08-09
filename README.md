@@ -1,6 +1,26 @@
 # AIRA
 
-Aira is a simple script language based on python, it intend to learn how to make a script language.
+Aira is a simple script language based on python3, it intend to learn how to make a script language.
+
+## Installation
+
+```bash
+$ git clone https://github.com/qpalzmqaz123/aira.git
+
+$ cd aira
+
+$ python3 setup.py install
+```
+
+## Usage
+
+```bash
+Usage: aira [OPTIONS] FILE
+
+Options:
+  --debug  Show debug info.
+  --help   Show this message and exit.
+```
 
 ## Examples
 
