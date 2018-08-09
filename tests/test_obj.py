@@ -21,6 +21,24 @@ class TestObj(BaseTest):
         '''
         assert self.vm.stack[0] == 'ab\'c'
 
+    def test_string_escape_1(self):
+        '''
+        'ab"c'
+        '''
+        assert self.vm.stack[0] == 'ab"c'
+
+    def test_string_escape_dq(self):
+        '''
+        "ab'c"
+        '''
+        assert self.vm.stack[0] == 'ab\'c'
+
+    def test_string_escape_dq_1(self):
+        '''
+        "ab\\"c"
+        '''
+        assert self.vm.stack[0] == 'ab"c'
+
     def test_nil(self):
         '''nil'''
         assert self.vm.stack[0] == None

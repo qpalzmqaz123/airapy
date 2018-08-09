@@ -68,9 +68,9 @@ t_LBRACE  = r'\{'
 t_RBRACE  = r'\}'
 
 def t_STRING(t):
-    r"'(?:\\'|[^'])*?'"
-    t.value = t.value[1:-1]
-    t.value = t.value.replace("\\'", "'")
+    r"(?:'(?:\\'|[^'])*?')|(?:\"(?:\\\"|[^\"])*?\")"
+    t.value = eval(t.value)
+    print(t.value)
     return t
 
 def t_IDENTIFER(t):
