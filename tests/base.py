@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from pbl import Pbl
+from aira import Aira
 
 def case(fn):
     def wrapper(self):
@@ -9,10 +9,10 @@ def case(fn):
         if not script:
             raise TypeError('script is not defined')
 
-        pbl = Pbl()
-        tree = pbl.parse(script)
-        bytecode = pbl.compile(tree)
-        self.vm = pbl.run(bytecode, debug=True)
+        aira = Aira()
+        tree = aira.parse(script)
+        bytecode = aira.compile(tree)
+        self.vm = aira.run(bytecode, debug=True)
 
         fn(self)
 

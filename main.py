@@ -4,7 +4,7 @@
 import os
 import sys
 import click
-from pbl import Pbl
+from aira import Aira
 
 @click.command()
 @click.option('--debug', default=False, help='Show debug info.', is_flag=True)
@@ -15,19 +15,19 @@ def main(debug, file):
         print('\n------- script  -------')
         print(script)
 
-    pbl = Pbl()
+    aira = Aira()
 
-    tree = pbl.parse(script)
+    tree = aira.parse(script)
     if debug:
         print('\n------- AST -------')
         print(tree)
 
-    bytecode = pbl.compile(tree)
+    bytecode = aira.compile(tree)
     if debug:
         print('\n------- bytecode -------')
         print('\n'.join(['%4d %s' % (i, str(bytecode[i])) for i in range(len(bytecode))]))
 
-    frame = pbl.run(bytecode, debug=True)
+    frame = aira.run(bytecode, debug=True)
     if debug:
         print('\n------- frame -------')
         print(frame)

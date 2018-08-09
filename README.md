@@ -1,6 +1,6 @@
-# Pbl
+# AIRA
 
-Python based programming language
+Aira is a simple script language based on python, it intend to learn how to make a script language.
 
 ## Examples
 

@@ -466,7 +466,7 @@ class Throw(Node):
         self.expr.compile(lst)
         lst.append(compiler.THROW(line=self.line, text=self.text))
 
-class PblException(Node):
+class AiraException(Node):
 
     def __init__(self, try_body, except_body, final_body, var, line, text):
         super().__init__(line=line, text=text)

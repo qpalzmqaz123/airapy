@@ -7,7 +7,7 @@ from . import parser
 from . import vm
 from . import compiler
 
-class Pbl(object):
+class Aira(object):
 
     def __init__(self):
         self._vm = vm.VM()
@@ -102,11 +102,11 @@ class Pbl(object):
 
 class Api(object):
 
-    def __init__(self, pbl):
-        self.pbl = pbl
+    def __init__(self, aira):
+        self.aira = aira
 
     def get_global_object(self):
-        return self.pbl._vm.frames[0].hash
+        return self.aira._vm.frames[0].hash
 
     def set_property(self, target, key, value):
         target[key] = value

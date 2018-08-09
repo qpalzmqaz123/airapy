@@ -343,7 +343,7 @@ def p_continue_stmt(p):
 
 def p_exception_stmt(p):
     '''exception_stmt : TRY DO stmt_list CATCH IDENTIFER DO stmt_list END'''
-    p[0] = ast.PblException(p[3], p[7], ast.Block(), ast.Variable(p[5], line=p.lineno(5), text=p[5]), line=p.lineno(1), text=p[1])
+    p[0] = ast.AiraException(p[3], p[7], ast.Block(), ast.Variable(p[5], line=p.lineno(5), text=p[5]), line=p.lineno(1), text=p[1])
     p.set_lineno(0, p.lineno(1))
 
 def p_throw_stmt(p):
