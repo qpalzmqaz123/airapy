@@ -70,7 +70,6 @@ t_RBRACE  = r'\}'
 def t_STRING(t):
     r"(?:'(?:\\'|[^'])*?')|(?:\"(?:\\\"|[^\"])*?\")"
     t.value = eval(t.value)
-    print(t.value)
     return t
 
 def t_IDENTIFER(t):
